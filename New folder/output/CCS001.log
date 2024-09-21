@@ -1,0 +1,230 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1884  
+1885  
+1886  /*Creating macros for convience directory changes*/
+1887  %let output =D:\Clinical-Case-Studies\Case_study_1\output;
+1888  %let RawData=D:\Clinical-Case-Studies\Case_study_1\RawData ;
+1889  %let sasdatasets =D:\Clinical-Case-Studies\Case_study_1\SasDatasets;
+1890  
+1891  /*improting Raw datasets in SAScode for making SAS Datasets*/
+1892  
+1893  libname Data "&sasdatasets" ;
+NOTE: Libref DATA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\Clinical-Case-Studies\Case_study_1\SasDatasets
+1894  /*Create SAS dataset & named it as demo  ( Xlsx files)*/
+1895  proc import datafile="&RawData\demography.csv"
+1896  out= Data.demo
+1897  dbms=csv replace;
+1898  run;
+
+Name ETHNICITY is a duplicate.
+Problems were detected with provided names.  See LOG. 
+1899   /**********************************************************************
+1900   *   PRODUCT:   SAS
+1901   *   VERSION:   9.4
+1902   *   CREATOR:   External File Interface
+1903   *   DATE:      21SEP24
+1904   *   DESC:      Generated SAS Datastep Code
+1905   *   TEMPLATE SOURCE:  (None Specified.)
+1906   ***********************************************************************/
+1907      data DATA.DEMO    ;
+1908      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+1909      infile 'D:\Clinical-Case-Studies\Case_study_1\RawData\demography.csv' delimiter = ','
+1909! MISSOVER DSD lrecl=32767 firstobs=2 ;
+1910         informat BARCODE best32. ;
+1911         informat PATID best32. ;
+1912         informat SITE best32. ;
+1913         informat PAGENO best32. ;
+1914         informat PROTO $7. ;
+1915         informat SEQ best32. ;
+1916         informat SCREENNO best32. ;
+1917         informat SUBJINIT $3. ;
+1918         informat VISIT $6. ;
+1919         informat BIRTHDT mmddyy10. ;
+1920         informat SEXCD best32. ;
+1921         informat RACECD best32. ;
+1922         informat RACEOTH $5. ;
+1923         informat ETHNICITY best32. ;
+1924         informat VAR15 $12. ;
+1925         format BARCODE best12. ;
+1926         format PATID best12. ;
+1927         format SITE best12. ;
+1928         format PAGENO best12. ;
+1929         format PROTO $7. ;
+1930         format SEQ best12. ;
+1931         format SCREENNO best12. ;
+1932         format SUBJINIT $3. ;
+1933         format VISIT $6. ;
+1934         format BIRTHDT mmddyy10. ;
+1935         format SEXCD best12. ;
+1936         format RACECD best12. ;
+1937         format RACEOTH $5. ;
+1938         format ETHNICITY best12. ;
+1939         format VAR15 $12. ;
+1940      input
+1941                  BARCODE
+1942                  PATID
+1943                  SITE
+1944                  PAGENO
+1945                  PROTO  $
+1946                  SEQ
+1947                  SCREENNO
+1948                  SUBJINIT  $
+1949                  VISIT  $
+1950                  BIRTHDT
+1951                  SEXCD
+1952                  RACECD
+1953                  RACEOTH  $
+1954                  ETHNICITY
+1955                  VAR15  $
+1956      ;
+1957      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+1958      run;
+
+NOTE: The infile 'D:\Clinical-Case-Studies\Case_study_1\RawData\demography.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_1\RawData\demography.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=14278,
+      Last Modified=23 August 2024 09:59:46,
+      Create Time=21 September 2024 23:12:07
+
+NOTE: 244 records were read from the infile 
+      'D:\Clinical-Case-Studies\Case_study_1\RawData\demography.csv'.
+      The minimum record length was 54.
+      The maximum record length was 84.
+NOTE: The data set DATA.DEMO has 244 observations and 15 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+244 rows created in DATA.DEMO from D:\Clinical-Case-Studies\Case_study_1\RawData\demography.csv.
+  
+  
+  
+NOTE: DATA.DEMO data set was successfully created.
+NOTE: The data set DATA.DEMO has 244 observations and 15 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.01 seconds
+      
+
+1959  
+1960  proc import datafile="&RawData\visit.xlsx"
+1961  out= Data.Visit (drop=F G H I J K L M N O P VAR17)
+1962  dbms=xlsx replace;
+1963  run;
+
+NOTE:    Variable Name Change.  start date -> start_date                      
+NOTE:    Variable Name Change.  end date -> end_date                        
+NOTE:    Variable Name Change.  C:\Users\Guest1\Downloads -> VAR17                           
+NOTE: One or more variables were converted because the data type is not supported by the V9 engine. 
+      For more details, run with options MSGLEVEL=I.
+NOTE: The import data set has 34 observations and 17 variables.
+NOTE: DATA.VISIT data set was successfully created.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1964  
+1965  /*Caluculation of BMI from visit data set
+1966    merging the data sets demo and visit (where patId is  common in both)*/
+1967  proc sort data=data.demo out=demo ;
+1968  by PATID ;
+1969  run;
+
+NOTE: There were 244 observations read from the data set DATA.DEMO.
+NOTE: The data set WORK.DEMO has 244 observations and 15 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1970  
+1971  proc sort data=data.visit out=visit ;
+1972  by PAT;
+1973  run;
+
+NOTE: There were 34 observations read from the data set DATA.VISIT.
+NOTE: The data set WORK.VISIT has 34 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1974  /*merging the sorted data sets */
+1975  data demographics;
+1976  merge demo (in=a) visit(in=b rename=(pat=patid));
+1977  by patid;
+1978  if a and b;
+1979  run;
+
+NOTE: There were 244 observations read from the data set WORK.DEMO.
+NOTE: There were 34 observations read from the data set WORK.VISIT.
+NOTE: The data set WORK.DEMOGRAPHICS has 34 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1980  
+1981  
+1982                    /* Gender format assignment */
+1983  proc format;
+1984      value GenderFmt
+1985          1 = 'Male'
+1986          2 = 'Female';
+NOTE: Format GENDERFMT is already on the library WORK.FORMATS.
+NOTE: Format GENDERFMT has been output.
+1987  run;
+
+NOTE: PROCEDURE FORMAT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1988                   /*Caluculation of BMI and it stored in permanent library*/
+1989  data BMI;
+1990  set demographics;
+1991  BMI=(weight/(height*height)*703.1); /*703.1 added for Categories distribution*/
+1992  label BMI='Body Mass Index';
+1993  label patid=Subject;
+1994  label sexcd=Gender;
+1995  format sexcd genderFmt.;
+1996  format BMI 7.3;
+1997  keep patid sexcd BMI;
+1998  run;
+
+NOTE: There were 34 observations read from the data set WORK.DEMOGRAPHICS.
+NOTE: The data set WORK.BMI has 34 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1999  
+2000  
+2001  proc printto print="&output\demo.lst" new;
+
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+2002  proc print data=Bmi;
+2003  run;
+
+NOTE: There were 34 observations read from the data set WORK.BMI.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+2004  proc printto;
+2005  run;
+

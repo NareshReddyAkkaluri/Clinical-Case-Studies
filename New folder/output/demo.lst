@@ -1,0 +1,38 @@
+                                            The SAS System      23:12 Saturday, September 21, 2024   2
+
+                               Obs           PATID    SEXCD         BMI
+
+                                 1               1    Female     14.947
+                                 2               2    Female     13.685
+                                 3               3    Female     16.071
+                                 4               4    Female     15.663
+                                 5               5    Female     20.692
+                                 6               6    Male       16.302
+                                 7               7    Male       13.183
+                                 8               8    Female     18.811
+                                 9               9    Male       12.996
+                                10              10    Female     30.761
+                                11              11    Female     10.416
+                                12              12    Female     18.325
+                                13              13    Female     14.204
+                                14              14    Male       21.626
+                                15              15    Female     14.947
+                                16              16    Female     13.685
+                                17              17    Male       16.071
+                                18              18    Female     15.663
+                                19              19    Male       20.692
+                                20              20    Female     16.302
+                                21              21    Male       13.183
+                                22              22    Female     18.325
+                                23              33    Female     14.204
+                                24              40    Female     13.685
+                                25              45    Female     21.626
+                                26              46    Female     11.740
+                                27              47    Female     14.349
+                                28              48    Female     14.947
+                                29              53    Male       16.071
+                                30              70    Female     22.546
+                                31              73    Female     13.183
+                                32              75    Female     16.302
+                                33              76    Female     20.692
+                                34              78    Male       15.663
