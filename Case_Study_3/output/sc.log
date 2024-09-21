@@ -1,0 +1,184 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+610  
+611  
+612  /*Creating macros for convience directory changes*/
+613  %let output =D:\KiTel_CS\Case_study_5\output;
+614  %let RawData=D:\KiTel_CS\Case_study_5\RawData ;
+615  /*Creating permanent library*/
+616  libname Input "&RawData" ;
+NOTE: Libref INPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_5\RawData
+617  libname output "&output" ;
+NOTE: Libref OUTPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_5\output
+618  
+619  /*Importing  SAS dataset*/
+620  data screen;
+621  set Input.sc;
+622  run;
+
+NOTE: There were 10 observations read from the data set INPUT.SC.
+NOTE: The data set WORK.SCREEN has 10 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+623  data patients;
+624  set Input.pat_inf;
+625  run;
+
+NOTE: There were 11 observations read from the data set INPUT.PAT_INF.
+NOTE: The data set WORK.PATIENTS has 11 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+626  data lab;
+627  set Input.lab;
+628  run;
+
+NOTE: There were 19 observations read from the data set INPUT.LAB.
+NOTE: The data set WORK.LAB has 19 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+629  
+630  /*Modifying as per requirement*/
+631  data scr(drop=patid);
+632  retain site pat scr_test;
+633  set screen;
+634  length pat 3;
+635  pat=tranwrd(patid,'y',' ');
+636  run;
+
+NOTE: Character values have been converted to numeric values at the places given by: (Line):(Column).
+      635:5   
+NOTE: There were 10 observations read from the data set WORK.SCREEN.
+NOTE: The data set WORK.SCR has 10 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+637  
+638  /*Sorting dataset*/
+639  proc sort data=scr;
+640  by site pat;
+641  run;
+
+NOTE: There were 10 observations read from the data set WORK.SCR.
+NOTE: The data set WORK.SCR has 10 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+642  
+643  proc sort data=patients out=pat_inf;
+644  by site patid;
+645  run;
+
+NOTE: There were 11 observations read from the data set WORK.PATIENTS.
+NOTE: The data set WORK.PAT_INF has 11 observations and 9 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+646  
+647  /*Merging of data*/
+648  data merges(drop=dob dat);
+649  merge pat_inf(in=a) scr(in=b rename=(pat=patid));
+650  by site patid;
+651  if a and b;
+652  dat=input(dob,mmddyy10.);
+653  birdt=dat;
+654  format birdt date9.;
+655  age=intck("year",birdt,today());
+656  run;
+
+NOTE: There were 11 observations read from the data set WORK.PAT_INF.
+NOTE: There were 10 observations read from the data set WORK.SCR.
+NOTE: The data set WORK.MERGES has 9 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+657  
+658  proc sql;
+659  create table sc as select * from merges,lab
+660  order by site,patid,lb_test;
+NOTE: The execution of this query involves performing one or more Cartesian product joins that can 
+      not be optimized.
+NOTE: Table WORK.SC created, with 171 rows and 12 columns.
+
+661  quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+662  
+663  data sc (drop=height weight);
+664  set sc;
+665  ht=input(height,5.1);
+666  wt=input(weight,6.2);
+667  run;
+
+NOTE: There were 171 observations read from the data set WORK.SC.
+NOTE: The data set WORK.SC has 171 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+668  
+669  /*Generating report according to mock shell and specifications*/
+670  ods listing;
+671  ods rtf file="&output\sc.rtf";
+NOTE: Writing RTF Body file: D:\KiTel_CS\Case_study_5\output\sc.rtf
+672  ods listing file="&output\sc.lst";
+673  title1 'Listing 5';
+674  title2 'Screening Patient';
+675  footnote1 '* 1=Male & 2=Female';
+676  footnote2 "**Created by Naresh Reddy Akkaluri &sysdate. &sysday. &systime.";
+677  proc report data=sc;
+678  column site patid age sex birdt ht wt racespec lb_test;
+679  define site/order "SITE" center;
+680  define patid/group "PATID" center;
+681  define age/order "AGE" center;
+682  define sex/order "SEX" center;
+683  define birdt/order format=date9. "BIRDT" center;
+684  define ht/order format=5.1 "HEIGHT" center;
+685  define wt/order format=6.2 "WEIGHT" center;
+686  define racespec/order "RACESPEC" center;
+687  define lb_test/display "LB_TEST" center;
+688  run;
+
+NOTE: Groups are not created because the usage of lb_test is DISPLAY. To avoid this note, change all 
+GROUP variables to ORDER variables.
+NOTE: There were 171 observations read from the data set WORK.SC.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.03 seconds
+      
+
+689  
+690  ods rtf close;
+691  ods listing close;
+692  ods listing;
+693  /*Closing log file*/
+694  proc printto;
+695  run;
+

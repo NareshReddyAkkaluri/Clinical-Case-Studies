@@ -1,0 +1,2358 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+3888  
+3889  
+3890  /*Creating macros for convience directory changes*/
+3891  %let output =D:\Clinical-Case-Studies\Case_study_2\output;
+3892  %let RawData=D:\Clinical-Case-Studies\Case_study_2\RawData ;
+3893  %let sasdatasets =D:\Clinical-Case-Studies\Case_study_2\SasDatasets;
+3894  /*Generating csv and xls files for all outliers as per specification*/
+3895  
+3896  %macro export_xls_csv(data=, xls_outfile=,csv_outfile=, sheet=);
+3897  /* Export to XLS */
+3898      proc export data=&data
+3899          outfile="&xls_outfile"
+3900          dbms= xls replace;
+3901          sheet="&sheet";
+3902      run;
+3903  /* Export to CSV */
+3904      proc export data=&data
+3905          outfile="&csv_outfile"
+3906          dbms=csv replace;
+3907      run;
+3908  %mend export_xls_csv;
+3909  
+3910  
+3911  
+3912  
+3913  /*Creating permanent library*/
+3914  libname mylib "&sasdatasets" ;
+NOTE: Libref MYLIB was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\Clinical-Case-Studies\Case_study_2\SasDatasets
+3915  
+3916  /*Step 1: Import the data files Ae.xls, Dm2.xls,MH.xls and demography.csv */
+3917  proc import datafile="&RawData\MH.xls"
+3918      out=mylib.MH (drop = d)
+3919      dbms=xls replace;
+3920  run;
+
+NOTE:    Variable Name Change.  Screen date -> Screen_date                     
+NOTE: One or more variables were converted because the data type is not supported by the V9 engine. 
+      For more details, run with options MSGLEVEL=I.
+NOTE: The import data set has 17 observations and 4 variables.
+NOTE: MYLIB.MH data set was successfully created.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+3921  
+3922  proc import datafile="&RawData\AE.xls"
+3923       out=mylib.AE
+3924       dbms=xls replace;
+3925  run;
+
+NOTE:    Variable Name Change.  Adverse event -> Adverse_event                   
+NOTE:    Variable Name Change.  visit date -> visit_date                      
+NOTE:    Variable Name Change.  start date -> start_date                      
+NOTE:    Variable Name Change.  end date -> end_date                        
+NOTE: One or more variables were converted because the data type is not supported by the V9 engine. 
+      For more details, run with options MSGLEVEL=I.
+NOTE: The import data set has 15 observations and 5 variables.
+NOTE: MYLIB.AE data set was successfully created.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+3926  
+3927  
+3928  proc import datafile="&RawData\dm2.xls"
+3929      out=mylib.DM2
+3930      dbms=xls replace;
+3931  run;
+
+NOTE: One or more variables were converted because the data type is not supported by the V9 engine. 
+      For more details, run with options MSGLEVEL=I.
+NOTE: The import data set has 20 observations and 4 variables.
+NOTE: MYLIB.DM2 data set was successfully created.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+3932  proc import datafile="&RawData\demography.csv"
+3933      out=mylib.demo
+3934      dbms=csv replace;
+3935  run;
+
+3936   /**********************************************************************
+3937   *   PRODUCT:   SAS
+3938   *   VERSION:   9.4
+3939   *   CREATOR:   External File Interface
+3940   *   DATE:      21SEP24
+3941   *   DESC:      Generated SAS Datastep Code
+3942   *   TEMPLATE SOURCE:  (None Specified.)
+3943   ***********************************************************************/
+3944      data MYLIB.DEMO    ;
+3945      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+3946      infile 'D:\Clinical-Case-Studies\Case_study_2\RawData\demography.csv' delimiter = ','
+3946! MISSOVER DSD lrecl=32767 firstobs=2 ;
+3947         informat BARCODE best32. ;
+3948         informat PATID best32. ;
+3949         informat INV_NO best32. ;
+3950         informat PAGENO best32. ;
+3951         informat PROTO $7. ;
+3952         informat SEQ best32. ;
+3953         informat E_STAT $1. ;
+3954         informat VISIT $6. ;
+3955         informat WEIGHT best32. ;
+3956         informat WUNIT best32. ;
+3957         informat TEMP best32. ;
+3958         informat TUNIT best32. ;
+3959         informat RESP best32. ;
+3960         informat PR best32. ;
+3961         informat SYSBP best32. ;
+3962         informat DIABP best32. ;
+3963         informat HEIGHT best32. ;
+3964         informat HUNIT best32. ;
+3965         format BARCODE best12. ;
+3966         format PATID best12. ;
+3967         format INV_NO best12. ;
+3968         format PAGENO best12. ;
+3969         format PROTO $7. ;
+3970         format SEQ best12. ;
+3971         format E_STAT $1. ;
+3972         format VISIT $6. ;
+3973         format WEIGHT best12. ;
+3974         format WUNIT best12. ;
+3975         format TEMP best12. ;
+3976         format TUNIT best12. ;
+3977         format RESP best12. ;
+3978         format PR best12. ;
+3979         format SYSBP best12. ;
+3980         format DIABP best12. ;
+3981         format HEIGHT best12. ;
+3982         format HUNIT best12. ;
+3983      input
+3984                  BARCODE
+3985                  PATID
+3986                  INV_NO
+3987                  PAGENO
+3988                  PROTO  $
+3989                  SEQ
+3990                  E_STAT  $
+3991                  VISIT  $
+3992                  WEIGHT
+3993                  WUNIT
+3994                  TEMP
+3995                  TUNIT
+3996                  RESP
+3997                  PR
+3998                  SYSBP
+3999                  DIABP
+4000                  HEIGHT
+4001                  HUNIT
+4002      ;
+4003      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4004      run;
+
+NOTE: The infile 'D:\Clinical-Case-Studies\Case_study_2\RawData\demography.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\RawData\demography.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=119627,
+      Last Modified=23 August 2024 10:14:16,
+      Create Time=21 September 2024 23:12:07
+
+NOTE: 1727 records were read from the infile 
+      'D:\Clinical-Case-Studies\Case_study_2\RawData\demography.csv'.
+      The minimum record length was 42.
+      The maximum record length was 81.
+NOTE: The data set MYLIB.DEMO has 1727 observations and 18 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1727 rows created in MYLIB.DEMO from D:\Clinical-Case-Studies\Case_study_2\RawData\demography.csv.
+  
+  
+  
+NOTE: MYLIB.DEMO data set was successfully created.
+NOTE: The data set MYLIB.DEMO has 1727 observations and 18 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.01 seconds
+      
+
+4005  
+4006  /*sorting data by patid in order to merge all the data set*/
+4007  proc sort data=mylib.dm2;
+4008     by patid;
+4009  run;
+
+NOTE: There were 20 observations read from the data set MYLIB.DM2.
+NOTE: The data set MYLIB.DM2 has 20 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4010  
+4011  proc sort data=mylib.ae;
+4012     by subject;
+4013  run;
+
+NOTE: There were 15 observations read from the data set MYLIB.AE.
+NOTE: The data set MYLIB.AE has 15 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+4014  
+4015  proc sort data=mylib.demo;
+4016     by patid;
+4017  run;
+
+NOTE: There were 1727 observations read from the data set MYLIB.DEMO.
+NOTE: The data set MYLIB.DEMO has 1727 observations and 18 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4018  
+4019  proc sort data=mylib.mh;
+4020     by patid;
+4021  run;
+
+NOTE: There were 17 observations read from the data set MYLIB.MH.
+NOTE: The data set MYLIB.MH has 17 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+4022  
+4023  
+4024  /*merging DATA sets*/
+4025  data mylib.merges;
+4026  merge mylib.ae(in=a rename=(subject=patid)) mylib.demo(in=b) mylib.dm2(in=c) mylib.mh(in=d);
+4027  by patid;
+4028  if a & b & c & d;
+4029  run;
+
+NOTE: MERGE statement has more than one data set with repeats of BY values.
+NOTE: There were 15 observations read from the data set MYLIB.AE.
+NOTE: There were 1727 observations read from the data set MYLIB.DEMO.
+NOTE: There were 20 observations read from the data set MYLIB.DM2.
+NOTE: There were 17 observations read from the data set MYLIB.MH.
+NOTE: The data set MYLIB.MERGES has 106 observations and 27 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4030  
+4031  
+4032  /*retaining the height values
+4033    Weight & temperature variable requires 1 decimal data values*/
+4034  data Modi_data (drop=x);
+4035       set mylib.merges;
+4036       by patid descending height;
+4037       retain x;
+4038       if height ne . then x=height;
+4039       else if height eq . then height=x;
+4040       weight = round(weight, 3.1);
+4041       temp = round(temp, 3.1);
+4042  run;
+
+NOTE: Missing values were generated as a result of performing an operation on missing values.
+      Each place is given by: (Number of times) at (Line):(Column).
+      1 at 4041:13   
+NOTE: There were 106 observations read from the data set MYLIB.MERGES.
+NOTE: The data set WORK.MODI_DATA has 106 observations and 27 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4043  
+4044  /*Exporting modified data set to output window as xls file*/
+4045  %export_xls_csv(data=Modi_data, xls_outfile=&output\Modi_data.xls,
+4046  csv_outfile=&output\Modi_data.csv, sheet=Modified_DATA );
+
+NOTE: The export data set has 106 observations and 27 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\Modi_data.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+4047   /**********************************************************************
+4048   *   PRODUCT:   SAS
+4049   *   VERSION:   9.4
+4050   *   CREATOR:   External File Interface
+4051   *   DATE:      21SEP24
+4052   *   DESC:      Generated SAS Datastep Code
+4053   *   TEMPLATE SOURCE:  (None Specified.)
+4054   ***********************************************************************/
+4055      data _null_;
+4056      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+4057      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+4058      file 'D:\Clinical-Case-Studies\Case_study_2\output\Modi_data.csv' delimiter=',' DSD DROPOVER
+4058!  lrecl=32767;
+4059      if _n_ = 1 then        /* write column names or labels */
+4060       do;
+4061         put
+4062            "Adverse_event"
+4063         ','
+4064            "patid"
+4065         ','
+4066            "visit_date"
+4067         ','
+4068            "start_date"
+4069         ','
+4070            "end_date"
+4071         ','
+4072            "BARCODE"
+4073         ','
+4074            "INV_NO"
+4075         ','
+4076            "PAGENO"
+4077         ','
+4078            "PROTO"
+4079         ','
+4080            "SEQ"
+4081         ','
+4082            "E_STAT"
+4083         ','
+4084            "VISIT"
+4085         ','
+4086            "WEIGHT"
+4087         ','
+4088            "WUNIT"
+4089         ','
+4090            "TEMP"
+4091         ','
+4092            "TUNIT"
+4093         ','
+4094            "RESP"
+4095         ','
+4096            "PR"
+4097         ','
+4098            "SYSBP"
+4099         ','
+4100            "DIABP"
+4101         ','
+4102            "HEIGHT"
+4103         ','
+4104            "HUNIT"
+4105         ','
+4106            "sex"
+4107         ','
+4108            "race"
+4109         ','
+4110            "BIRTHDT"
+4111         ','
+4112            "Screen_date"
+4113         ','
+4114            "status"
+4115         ;
+4116       end;
+4117     set  MODI_DATA   end=EFIEOD;
+4118         format Adverse_event $16. ;
+4119         format patid best12. ;
+4120         format visit_date date9. ;
+4121         format start_date date9. ;
+4122         format end_date date9. ;
+4123         format BARCODE best12. ;
+4124         format INV_NO best12. ;
+4125         format PAGENO best12. ;
+4126         format PROTO $7. ;
+4127         format SEQ best12. ;
+4128         format E_STAT $1. ;
+4129         format VISIT $6. ;
+4130         format WEIGHT best12. ;
+4131         format WUNIT best12. ;
+4132         format TEMP best12. ;
+4133         format TUNIT best12. ;
+4134         format RESP best12. ;
+4135         format PR best12. ;
+4136         format SYSBP best12. ;
+4137         format DIABP best12. ;
+4138         format HEIGHT best12. ;
+4139         format HUNIT best12. ;
+4140         format sex $14. ;
+4141         format race $11. ;
+4142         format BIRTHDT mmddyy10. ;
+4143         format Screen_date date9. ;
+4144         format status $12. ;
+4145       do;
+4146         EFIOUT + 1;
+4147         put Adverse_event $ @;
+4148         put patid @;
+4149         put visit_date @;
+4150         put start_date @;
+4151         put end_date @;
+4152         put BARCODE @;
+4153         put INV_NO @;
+4154         put PAGENO @;
+4155         put PROTO $ @;
+4156         put SEQ @;
+4157         put E_STAT $ @;
+4158         put VISIT $ @;
+4159         put WEIGHT @;
+4160         put WUNIT @;
+4161         put TEMP @;
+4162         put TUNIT @;
+4163         put RESP @;
+4164         put PR @;
+4165         put SYSBP @;
+4166         put DIABP @;
+4167         put HEIGHT @;
+4168         put HUNIT @;
+4169         put sex $ @;
+4170         put race $ @;
+4171         put BIRTHDT @;
+4172         put Screen_date @;
+4173         put status $ ;
+4174         ;
+4175       end;
+4176      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4177      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+4178      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\Modi_data.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\Modi_data.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 107 records were written to the file 
+      'D:\Clinical-Case-Studies\Case_study_2\output\Modi_data.csv'.
+      The minimum record length was 131.
+      The maximum record length was 188.
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+106 records created in D:\Clinical-Case-Studies\Case_study_2\output\Modi_data.csv from MODI_DATA.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\Modi_data.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+4179  
+4180  
+4181  
+4182  /* Identify and list duplicate patients */
+4183  
+4184  proc sort data=modi_data nodupkey dupout=demo_dup;
+4185      by PATID visit;
+4186  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: 0 observations with duplicate key values were deleted.
+NOTE: The data set WORK.DEMO_DUP has 0 observations and 27 variables.
+NOTE: The data set WORK.MODI_DATA has 106 observations and 27 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4186!      /*A sorted dataset demo_sorted is created,
+4187       and duplicates are outputted to demo_dup*/
+4188  
+4189  /*Export duplicates to a new Excel sheet*/
+4190  %export_xls_csv(data=demo_dup, xls_outfile=&output\demo_dup.xls,
+4191  csv_outfile=&output\demo_dup.csv, sheet=demo_dup );
+
+NOTE: The export data set has 0 observations and 27 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\demo_dup.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: No observations in data set WORK.DEMO_DUP.
+NOTE: Data set has 0 observations.
+4192   /**********************************************************************
+4193   *   PRODUCT:   SAS
+4194   *   VERSION:   9.4
+4195   *   CREATOR:   External File Interface
+4196   *   DATE:      21SEP24
+4197   *   DESC:      Generated SAS Datastep Code
+4198   *   TEMPLATE SOURCE:  (None Specified.)
+4199   ***********************************************************************/
+4200      data _null_;
+4201      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+4202      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+4203      file 'D:\Clinical-Case-Studies\Case_study_2\output\demo_dup.csv' delimiter=',' DSD DROPOVER
+4203! lrecl=32767;
+4204      if _n_ = 1 then        /* write column names or labels */
+4205       do;
+4206         put
+4207            "Adverse_event"
+4208         ','
+4209            "patid"
+4210         ','
+4211            "visit_date"
+4212         ','
+4213            "start_date"
+4214         ','
+4215            "end_date"
+4216         ','
+4217            "BARCODE"
+4218         ','
+4219            "INV_NO"
+4220         ','
+4221            "PAGENO"
+4222         ','
+4223            "PROTO"
+4224         ','
+4225            "SEQ"
+4226         ','
+4227            "E_STAT"
+4228         ','
+4229            "VISIT"
+4230         ','
+4231            "WEIGHT"
+4232         ','
+4233            "WUNIT"
+4234         ','
+4235            "TEMP"
+4236         ','
+4237            "TUNIT"
+4238         ','
+4239            "RESP"
+4240         ','
+4241            "PR"
+4242         ','
+4243            "SYSBP"
+4244         ','
+4245            "DIABP"
+4246         ','
+4247            "HEIGHT"
+4248         ','
+4249            "HUNIT"
+4250         ','
+4251            "sex"
+4252         ','
+4253            "race"
+4254         ','
+4255            "BIRTHDT"
+4256         ','
+4257            "Screen_date"
+4258         ','
+4259            "status"
+4260         ;
+4261       end;
+4262     set  DEMO_DUP   end=EFIEOD;
+4263         format Adverse_event $16. ;
+4264         format patid best12. ;
+4265         format visit_date date9. ;
+4266         format start_date date9. ;
+4267         format end_date date9. ;
+4268         format BARCODE best12. ;
+4269         format INV_NO best12. ;
+4270         format PAGENO best12. ;
+4271         format PROTO $7. ;
+4272         format SEQ best12. ;
+4273         format E_STAT $1. ;
+4274         format VISIT $6. ;
+4275         format WEIGHT best12. ;
+4276         format WUNIT best12. ;
+4277         format TEMP best12. ;
+4278         format TUNIT best12. ;
+4279         format RESP best12. ;
+4280         format PR best12. ;
+4281         format SYSBP best12. ;
+4282         format DIABP best12. ;
+4283         format HEIGHT best12. ;
+4284         format HUNIT best12. ;
+4285         format sex $14. ;
+4286         format race $11. ;
+4287         format BIRTHDT mmddyy10. ;
+4288         format Screen_date date9. ;
+4289         format status $12. ;
+4290       do;
+4291         EFIOUT + 1;
+4292         put Adverse_event $ @;
+4293         put patid @;
+4294         put visit_date @;
+4295         put start_date @;
+4296         put end_date @;
+4297         put BARCODE @;
+4298         put INV_NO @;
+4299         put PAGENO @;
+4300         put PROTO $ @;
+4301         put SEQ @;
+4302         put E_STAT $ @;
+4303         put VISIT $ @;
+4304         put WEIGHT @;
+4305         put WUNIT @;
+4306         put TEMP @;
+4307         put TUNIT @;
+4308         put RESP @;
+4309         put PR @;
+4310         put SYSBP @;
+4311         put DIABP @;
+4312         put HEIGHT @;
+4313         put HUNIT @;
+4314         put sex $ @;
+4315         put race $ @;
+4316         put BIRTHDT @;
+4317         put Screen_date @;
+4318         put status $ ;
+4319         ;
+4320       end;
+4321      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4322      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+4323      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\demo_dup.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\demo_dup.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 1 record was written to the file 'D:\Clinical-Case-Studies\Case_study_2\output\demo_dup.csv'.
+      The minimum record length was 188.
+      The maximum record length was 188.
+NOTE: There were 0 observations read from the data set WORK.DEMO_DUP.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+0 records created in D:\Clinical-Case-Studies\Case_study_2\output\demo_dup.csv from DEMO_DUP.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\demo_dup.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+4324  
+4325  
+4326  
+4327  
+4328  /*Weight is outside expected rangeBody mass index is belowexpected
+4329  (Check weight and height) --(19-26).*/
+4330  
+4331  data bmi_outliers;
+4332      set Modi_data;
+4333      bmi = (weight/(height*height)*703.1);
+4334      if bmi < 19 or bmi > 26 ;
+4335  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.BMI_OUTLIERS has 50 observations and 28 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4336  
+4337  %export_xls_csv(data=bmi_outliers, xls_outfile=&output\bmi_outliers.xls,
+4338  csv_outfile=&output\bmi_outliers.csv, sheet=demo_dup );
+
+NOTE: The export data set has 50 observations and 28 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\bmi_outliers.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+4339   /**********************************************************************
+4340   *   PRODUCT:   SAS
+4341   *   VERSION:   9.4
+4342   *   CREATOR:   External File Interface
+4343   *   DATE:      21SEP24
+4344   *   DESC:      Generated SAS Datastep Code
+4345   *   TEMPLATE SOURCE:  (None Specified.)
+4346   ***********************************************************************/
+4347      data _null_;
+4348      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+4349      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+4350      file 'D:\Clinical-Case-Studies\Case_study_2\output\bmi_outliers.csv' delimiter=',' DSD
+4350! DROPOVER lrecl=32767;
+4351      if _n_ = 1 then        /* write column names or labels */
+4352       do;
+4353         put
+4354            "Adverse_event"
+4355         ','
+4356            "patid"
+4357         ','
+4358            "visit_date"
+4359         ','
+4360            "start_date"
+4361         ','
+4362            "end_date"
+4363         ','
+4364            "BARCODE"
+4365         ','
+4366            "INV_NO"
+4367         ','
+4368            "PAGENO"
+4369         ','
+4370            "PROTO"
+4371         ','
+4372            "SEQ"
+4373         ','
+4374            "E_STAT"
+4375         ','
+4376            "VISIT"
+4377         ','
+4378            "WEIGHT"
+4379         ','
+4380            "WUNIT"
+4381         ','
+4382            "TEMP"
+4383         ','
+4384            "TUNIT"
+4385         ','
+4386            "RESP"
+4387         ','
+4388            "PR"
+4389         ','
+4390            "SYSBP"
+4391         ','
+4392            "DIABP"
+4393         ','
+4394            "HEIGHT"
+4395         ','
+4396            "HUNIT"
+4397         ','
+4398            "sex"
+4399         ','
+4400            "race"
+4401         ','
+4402            "BIRTHDT"
+4403         ','
+4404            "Screen_date"
+4405         ','
+4406            "status"
+4407         ','
+4408            "bmi"
+4409         ;
+4410       end;
+4411     set  BMI_OUTLIERS   end=EFIEOD;
+4412         format Adverse_event $16. ;
+4413         format patid best12. ;
+4414         format visit_date date9. ;
+4415         format start_date date9. ;
+4416         format end_date date9. ;
+4417         format BARCODE best12. ;
+4418         format INV_NO best12. ;
+4419         format PAGENO best12. ;
+4420         format PROTO $7. ;
+4421         format SEQ best12. ;
+4422         format E_STAT $1. ;
+4423         format VISIT $6. ;
+4424         format WEIGHT best12. ;
+4425         format WUNIT best12. ;
+4426         format TEMP best12. ;
+4427         format TUNIT best12. ;
+4428         format RESP best12. ;
+4429         format PR best12. ;
+4430         format SYSBP best12. ;
+4431         format DIABP best12. ;
+4432         format HEIGHT best12. ;
+4433         format HUNIT best12. ;
+4434         format sex $14. ;
+4435         format race $11. ;
+4436         format BIRTHDT mmddyy10. ;
+4437         format Screen_date date9. ;
+4438         format status $12. ;
+4439         format bmi best12. ;
+4440       do;
+4441         EFIOUT + 1;
+4442         put Adverse_event $ @;
+4443         put patid @;
+4444         put visit_date @;
+4445         put start_date @;
+4446         put end_date @;
+4447         put BARCODE @;
+4448         put INV_NO @;
+4449         put PAGENO @;
+4450         put PROTO $ @;
+4451         put SEQ @;
+4452         put E_STAT $ @;
+4453         put VISIT $ @;
+4454         put WEIGHT @;
+4455         put WUNIT @;
+4456         put TEMP @;
+4457         put TUNIT @;
+4458         put RESP @;
+4459         put PR @;
+4460         put SYSBP @;
+4461         put DIABP @;
+4462         put HEIGHT @;
+4463         put HUNIT @;
+4464         put sex $ @;
+4465         put race $ @;
+4466         put BIRTHDT @;
+4467         put Screen_date @;
+4468         put status $ @;
+4469         put bmi ;
+4470         ;
+4471       end;
+4472      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4473      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+4474      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\bmi_outliers.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\bmi_outliers.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 51 records were written to the file 
+      'D:\Clinical-Case-Studies\Case_study_2\output\bmi_outliers.csv'.
+      The minimum record length was 155.
+      The maximum record length was 192.
+NOTE: There were 50 observations read from the data set WORK.BMI_OUTLIERS.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+50 records created in D:\Clinical-Case-Studies\Case_study_2\output\bmi_outliers.csv from BMI_OUTLIERS.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\bmi_outliers.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+4475  
+4476  
+4477  /*The age is checked , if age  is not within expected range. (40 - 60.*/
+4478  data age_outliers;
+4479      set Modi_data;
+4480      age=intck('year',birthdt,today());
+4481      if age < 40 or age > 60 ;
+4482  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.AGE_OUTLIERS has 46 observations and 28 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+4483  
+4484  %export_xls_csv(data=age_outliers, xls_outfile=&output\age_outliers.xls,
+4485  csv_outfile=&output\age_outliers.csv, sheet=age_outliers );
+
+NOTE: The export data set has 46 observations and 28 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\age_outliers.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+4486   /**********************************************************************
+4487   *   PRODUCT:   SAS
+4488   *   VERSION:   9.4
+4489   *   CREATOR:   External File Interface
+4490   *   DATE:      21SEP24
+4491   *   DESC:      Generated SAS Datastep Code
+4492   *   TEMPLATE SOURCE:  (None Specified.)
+4493   ***********************************************************************/
+4494      data _null_;
+4495      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+4496      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+4497      file 'D:\Clinical-Case-Studies\Case_study_2\output\age_outliers.csv' delimiter=',' DSD
+4497! DROPOVER lrecl=32767;
+4498      if _n_ = 1 then        /* write column names or labels */
+4499       do;
+4500         put
+4501            "Adverse_event"
+4502         ','
+4503            "patid"
+4504         ','
+4505            "visit_date"
+4506         ','
+4507            "start_date"
+4508         ','
+4509            "end_date"
+4510         ','
+4511            "BARCODE"
+4512         ','
+4513            "INV_NO"
+4514         ','
+4515            "PAGENO"
+4516         ','
+4517            "PROTO"
+4518         ','
+4519            "SEQ"
+4520         ','
+4521            "E_STAT"
+4522         ','
+4523            "VISIT"
+4524         ','
+4525            "WEIGHT"
+4526         ','
+4527            "WUNIT"
+4528         ','
+4529            "TEMP"
+4530         ','
+4531            "TUNIT"
+4532         ','
+4533            "RESP"
+4534         ','
+4535            "PR"
+4536         ','
+4537            "SYSBP"
+4538         ','
+4539            "DIABP"
+4540         ','
+4541            "HEIGHT"
+4542         ','
+4543            "HUNIT"
+4544         ','
+4545            "sex"
+4546         ','
+4547            "race"
+4548         ','
+4549            "BIRTHDT"
+4550         ','
+4551            "Screen_date"
+4552         ','
+4553            "status"
+4554         ','
+4555            "age"
+4556         ;
+4557       end;
+4558     set  AGE_OUTLIERS   end=EFIEOD;
+4559         format Adverse_event $16. ;
+4560         format patid best12. ;
+4561         format visit_date date9. ;
+4562         format start_date date9. ;
+4563         format end_date date9. ;
+4564         format BARCODE best12. ;
+4565         format INV_NO best12. ;
+4566         format PAGENO best12. ;
+4567         format PROTO $7. ;
+4568         format SEQ best12. ;
+4569         format E_STAT $1. ;
+4570         format VISIT $6. ;
+4571         format WEIGHT best12. ;
+4572         format WUNIT best12. ;
+4573         format TEMP best12. ;
+4574         format TUNIT best12. ;
+4575         format RESP best12. ;
+4576         format PR best12. ;
+4577         format SYSBP best12. ;
+4578         format DIABP best12. ;
+4579         format HEIGHT best12. ;
+4580         format HUNIT best12. ;
+4581         format sex $14. ;
+4582         format race $11. ;
+4583         format BIRTHDT mmddyy10. ;
+4584         format Screen_date date9. ;
+4585         format status $12. ;
+4586         format age best12. ;
+4587       do;
+4588         EFIOUT + 1;
+4589         put Adverse_event $ @;
+4590         put patid @;
+4591         put visit_date @;
+4592         put start_date @;
+4593         put end_date @;
+4594         put BARCODE @;
+4595         put INV_NO @;
+4596         put PAGENO @;
+4597         put PROTO $ @;
+4598         put SEQ @;
+4599         put E_STAT $ @;
+4600         put VISIT $ @;
+4601         put WEIGHT @;
+4602         put WUNIT @;
+4603         put TEMP @;
+4604         put TUNIT @;
+4605         put RESP @;
+4606         put PR @;
+4607         put SYSBP @;
+4608         put DIABP @;
+4609         put HEIGHT @;
+4610         put HUNIT @;
+4611         put sex $ @;
+4612         put race $ @;
+4613         put BIRTHDT @;
+4614         put Screen_date @;
+4615         put status $ @;
+4616         put age ;
+4617         ;
+4618       end;
+4619      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4620      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+4621      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\age_outliers.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\age_outliers.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 47 records were written to the file 
+      'D:\Clinical-Case-Studies\Case_study_2\output\age_outliers.csv'.
+      The minimum record length was 134.
+      The maximum record length was 192.
+NOTE: There were 46 observations read from the data set WORK.AGE_OUTLIERS.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+46 records created in D:\Clinical-Case-Studies\Case_study_2\output\age_outliers.csv from AGE_OUTLIERS.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\age_outliers.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+4622  
+4623  
+4624  /*Check if Date of Birth (DOB) is greater than Visit Date*/
+4625  
+4626  
+4627  data dob_check ;
+4628      set Modi_data;
+4629       if birthdt > visit_date ;
+4630  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.DOB_CHECK has 16 observations and 27 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4631  
+4632  
+4633  %export_xls_csv(data=dob_check, xls_outfile=&output\dob_check.xls,
+4634  csv_outfile=&output\dob_check.csv, sheet=dob_check );
+
+NOTE: The export data set has 16 observations and 27 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\dob_check.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+
+4635   /**********************************************************************
+4636   *   PRODUCT:   SAS
+4637   *   VERSION:   9.4
+4638   *   CREATOR:   External File Interface
+4639   *   DATE:      21SEP24
+4640   *   DESC:      Generated SAS Datastep Code
+4641   *   TEMPLATE SOURCE:  (None Specified.)
+4642   ***********************************************************************/
+4643      data _null_;
+4644      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+4645      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+4646      file 'D:\Clinical-Case-Studies\Case_study_2\output\dob_check.csv' delimiter=',' DSD DROPOVER
+4646!  lrecl=32767;
+4647      if _n_ = 1 then        /* write column names or labels */
+4648       do;
+4649         put
+4650            "Adverse_event"
+4651         ','
+4652            "patid"
+4653         ','
+4654            "visit_date"
+4655         ','
+4656            "start_date"
+4657         ','
+4658            "end_date"
+4659         ','
+4660            "BARCODE"
+4661         ','
+4662            "INV_NO"
+4663         ','
+4664            "PAGENO"
+4665         ','
+4666            "PROTO"
+4667         ','
+4668            "SEQ"
+4669         ','
+4670            "E_STAT"
+4671         ','
+4672            "VISIT"
+4673         ','
+4674            "WEIGHT"
+4675         ','
+4676            "WUNIT"
+4677         ','
+4678            "TEMP"
+4679         ','
+4680            "TUNIT"
+4681         ','
+4682            "RESP"
+4683         ','
+4684            "PR"
+4685         ','
+4686            "SYSBP"
+4687         ','
+4688            "DIABP"
+4689         ','
+4690            "HEIGHT"
+4691         ','
+4692            "HUNIT"
+4693         ','
+4694            "sex"
+4695         ','
+4696            "race"
+4697         ','
+4698            "BIRTHDT"
+4699         ','
+4700            "Screen_date"
+4701         ','
+4702            "status"
+4703         ;
+4704       end;
+4705     set  DOB_CHECK   end=EFIEOD;
+4706         format Adverse_event $16. ;
+4707         format patid best12. ;
+4708         format visit_date date9. ;
+4709         format start_date date9. ;
+4710         format end_date date9. ;
+4711         format BARCODE best12. ;
+4712         format INV_NO best12. ;
+4713         format PAGENO best12. ;
+4714         format PROTO $7. ;
+4715         format SEQ best12. ;
+4716         format E_STAT $1. ;
+4717         format VISIT $6. ;
+4718         format WEIGHT best12. ;
+4719         format WUNIT best12. ;
+4720         format TEMP best12. ;
+4721         format TUNIT best12. ;
+4722         format RESP best12. ;
+4723         format PR best12. ;
+4724         format SYSBP best12. ;
+4725         format DIABP best12. ;
+4726         format HEIGHT best12. ;
+4727         format HUNIT best12. ;
+4728         format sex $14. ;
+4729         format race $11. ;
+4730         format BIRTHDT mmddyy10. ;
+4731         format Screen_date date9. ;
+4732         format status $12. ;
+4733       do;
+4734         EFIOUT + 1;
+4735         put Adverse_event $ @;
+4736         put patid @;
+4737         put visit_date @;
+4738         put start_date @;
+4739         put end_date @;
+4740         put BARCODE @;
+4741         put INV_NO @;
+4742         put PAGENO @;
+4743         put PROTO $ @;
+4744         put SEQ @;
+4745         put E_STAT $ @;
+4746         put VISIT $ @;
+4747         put WEIGHT @;
+4748         put WUNIT @;
+4749         put TEMP @;
+4750         put TUNIT @;
+4751         put RESP @;
+4752         put PR @;
+4753         put SYSBP @;
+4754         put DIABP @;
+4755         put HEIGHT @;
+4756         put HUNIT @;
+4757         put sex $ @;
+4758         put race $ @;
+4759         put BIRTHDT @;
+4760         put Screen_date @;
+4761         put status $ ;
+4762         ;
+4763       end;
+4764      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4765      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+4766      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\dob_check.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\dob_check.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 17 records were written to the file 
+      'D:\Clinical-Case-Studies\Case_study_2\output\dob_check.csv'.
+      The minimum record length was 144.
+      The maximum record length was 188.
+NOTE: There were 16 observations read from the data set WORK.DOB_CHECK.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+16 records created in D:\Clinical-Case-Studies\Case_study_2\output\dob_check.csv from DOB_CHECK.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\dob_check.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+4767  
+4768  
+4769  
+4770  
+4771  /*Validate Gender (M/F are valid, others are invalid)*/
+4772  data gender_check;
+4773      set Modi_data;
+4774      if sex in ('M', 'F');
+4775  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.GENDER_CHECK has 82 observations and 27 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4776  
+4777  %export_xls_csv(data=gender_check, xls_outfile=&output\gender_check.xls,
+4778  csv_outfile=&output\gender_check.csv, sheet=gender_check );
+
+NOTE: The export data set has 82 observations and 27 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\gender_check.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+4779   /**********************************************************************
+4780   *   PRODUCT:   SAS
+4781   *   VERSION:   9.4
+4782   *   CREATOR:   External File Interface
+4783   *   DATE:      21SEP24
+4784   *   DESC:      Generated SAS Datastep Code
+4785   *   TEMPLATE SOURCE:  (None Specified.)
+4786   ***********************************************************************/
+4787      data _null_;
+4788      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+4789      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+4790      file 'D:\Clinical-Case-Studies\Case_study_2\output\gender_check.csv' delimiter=',' DSD
+4790! DROPOVER lrecl=32767;
+4791      if _n_ = 1 then        /* write column names or labels */
+4792       do;
+4793         put
+4794            "Adverse_event"
+4795         ','
+4796            "patid"
+4797         ','
+4798            "visit_date"
+4799         ','
+4800            "start_date"
+4801         ','
+4802            "end_date"
+4803         ','
+4804            "BARCODE"
+4805         ','
+4806            "INV_NO"
+4807         ','
+4808            "PAGENO"
+4809         ','
+4810            "PROTO"
+4811         ','
+4812            "SEQ"
+4813         ','
+4814            "E_STAT"
+4815         ','
+4816            "VISIT"
+4817         ','
+4818            "WEIGHT"
+4819         ','
+4820            "WUNIT"
+4821         ','
+4822            "TEMP"
+4823         ','
+4824            "TUNIT"
+4825         ','
+4826            "RESP"
+4827         ','
+4828            "PR"
+4829         ','
+4830            "SYSBP"
+4831         ','
+4832            "DIABP"
+4833         ','
+4834            "HEIGHT"
+4835         ','
+4836            "HUNIT"
+4837         ','
+4838            "sex"
+4839         ','
+4840            "race"
+4841         ','
+4842            "BIRTHDT"
+4843         ','
+4844            "Screen_date"
+4845         ','
+4846            "status"
+4847         ;
+4848       end;
+4849     set  GENDER_CHECK   end=EFIEOD;
+4850         format Adverse_event $16. ;
+4851         format patid best12. ;
+4852         format visit_date date9. ;
+4853         format start_date date9. ;
+4854         format end_date date9. ;
+4855         format BARCODE best12. ;
+4856         format INV_NO best12. ;
+4857         format PAGENO best12. ;
+4858         format PROTO $7. ;
+4859         format SEQ best12. ;
+4860         format E_STAT $1. ;
+4861         format VISIT $6. ;
+4862         format WEIGHT best12. ;
+4863         format WUNIT best12. ;
+4864         format TEMP best12. ;
+4865         format TUNIT best12. ;
+4866         format RESP best12. ;
+4867         format PR best12. ;
+4868         format SYSBP best12. ;
+4869         format DIABP best12. ;
+4870         format HEIGHT best12. ;
+4871         format HUNIT best12. ;
+4872         format sex $14. ;
+4873         format race $11. ;
+4874         format BIRTHDT mmddyy10. ;
+4875         format Screen_date date9. ;
+4876         format status $12. ;
+4877       do;
+4878         EFIOUT + 1;
+4879         put Adverse_event $ @;
+4880         put patid @;
+4881         put visit_date @;
+4882         put start_date @;
+4883         put end_date @;
+4884         put BARCODE @;
+4885         put INV_NO @;
+4886         put PAGENO @;
+4887         put PROTO $ @;
+4888         put SEQ @;
+4889         put E_STAT $ @;
+4890         put VISIT $ @;
+4891         put WEIGHT @;
+4892         put WUNIT @;
+4893         put TEMP @;
+4894         put TUNIT @;
+4895         put RESP @;
+4896         put PR @;
+4897         put SYSBP @;
+4898         put DIABP @;
+4899         put HEIGHT @;
+4900         put HUNIT @;
+4901         put sex $ @;
+4902         put race $ @;
+4903         put BIRTHDT @;
+4904         put Screen_date @;
+4905         put status $ ;
+4906         ;
+4907       end;
+4908      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4909      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+4910      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\gender_check.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\gender_check.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 83 records were written to the file 
+      'D:\Clinical-Case-Studies\Case_study_2\output\gender_check.csv'.
+      The minimum record length was 131.
+      The maximum record length was 188.
+NOTE: There were 82 observations read from the data set WORK.GENDER_CHECK.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+82 records created in D:\Clinical-Case-Studies\Case_study_2\output\gender_check.csv from GENDER_CHECK.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\gender_check.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+4911  
+4912  
+4913  
+4914  
+4915  
+4916  /************************************Check Adverse Events **********************/
+4917  /*Stop before Start:*/
+4918  data ae_check;
+4919      set Modi_data ;
+4920      if end_date < start_date then output;
+4921  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.AE_CHECK has 36 observations and 27 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+4922  
+4923  %export_xls_csv(data=ae_check, xls_outfile=&output\ae_check.xls,
+4924  csv_outfile=&output\ae_check.csv, sheet=ae_check );
+
+NOTE: The export data set has 36 observations and 27 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\ae_check.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+4925   /**********************************************************************
+4926   *   PRODUCT:   SAS
+4927   *   VERSION:   9.4
+4928   *   CREATOR:   External File Interface
+4929   *   DATE:      21SEP24
+4930   *   DESC:      Generated SAS Datastep Code
+4931   *   TEMPLATE SOURCE:  (None Specified.)
+4932   ***********************************************************************/
+4933      data _null_;
+4934      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+4935      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+4936      file 'D:\Clinical-Case-Studies\Case_study_2\output\ae_check.csv' delimiter=',' DSD DROPOVER
+4936! lrecl=32767;
+4937      if _n_ = 1 then        /* write column names or labels */
+4938       do;
+4939         put
+4940            "Adverse_event"
+4941         ','
+4942            "patid"
+4943         ','
+4944            "visit_date"
+4945         ','
+4946            "start_date"
+4947         ','
+4948            "end_date"
+4949         ','
+4950            "BARCODE"
+4951         ','
+4952            "INV_NO"
+4953         ','
+4954            "PAGENO"
+4955         ','
+4956            "PROTO"
+4957         ','
+4958            "SEQ"
+4959         ','
+4960            "E_STAT"
+4961         ','
+4962            "VISIT"
+4963         ','
+4964            "WEIGHT"
+4965         ','
+4966            "WUNIT"
+4967         ','
+4968            "TEMP"
+4969         ','
+4970            "TUNIT"
+4971         ','
+4972            "RESP"
+4973         ','
+4974            "PR"
+4975         ','
+4976            "SYSBP"
+4977         ','
+4978            "DIABP"
+4979         ','
+4980            "HEIGHT"
+4981         ','
+4982            "HUNIT"
+4983         ','
+4984            "sex"
+4985         ','
+4986            "race"
+4987         ','
+4988            "BIRTHDT"
+4989         ','
+4990            "Screen_date"
+4991         ','
+4992            "status"
+4993         ;
+4994       end;
+4995     set  AE_CHECK   end=EFIEOD;
+4996         format Adverse_event $16. ;
+4997         format patid best12. ;
+4998         format visit_date date9. ;
+4999         format start_date date9. ;
+5000         format end_date date9. ;
+5001         format BARCODE best12. ;
+5002         format INV_NO best12. ;
+5003         format PAGENO best12. ;
+5004         format PROTO $7. ;
+5005         format SEQ best12. ;
+5006         format E_STAT $1. ;
+5007         format VISIT $6. ;
+5008         format WEIGHT best12. ;
+5009         format WUNIT best12. ;
+5010         format TEMP best12. ;
+5011         format TUNIT best12. ;
+5012         format RESP best12. ;
+5013         format PR best12. ;
+5014         format SYSBP best12. ;
+5015         format DIABP best12. ;
+5016         format HEIGHT best12. ;
+5017         format HUNIT best12. ;
+5018         format sex $14. ;
+5019         format race $11. ;
+5020         format BIRTHDT mmddyy10. ;
+5021         format Screen_date date9. ;
+5022         format status $12. ;
+5023       do;
+5024         EFIOUT + 1;
+5025         put Adverse_event $ @;
+5026         put patid @;
+5027         put visit_date @;
+5028         put start_date @;
+5029         put end_date @;
+5030         put BARCODE @;
+5031         put INV_NO @;
+5032         put PAGENO @;
+5033         put PROTO $ @;
+5034         put SEQ @;
+5035         put E_STAT $ @;
+5036         put VISIT $ @;
+5037         put WEIGHT @;
+5038         put WUNIT @;
+5039         put TEMP @;
+5040         put TUNIT @;
+5041         put RESP @;
+5042         put PR @;
+5043         put SYSBP @;
+5044         put DIABP @;
+5045         put HEIGHT @;
+5046         put HUNIT @;
+5047         put sex $ @;
+5048         put race $ @;
+5049         put BIRTHDT @;
+5050         put Screen_date @;
+5051         put status $ ;
+5052         ;
+5053       end;
+5054      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+5055      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+5056      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\ae_check.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\ae_check.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 37 records were written to the file 'D:\Clinical-Case-Studies\Case_study_2\output\ae_check.csv'.
+      The minimum record length was 144.
+      The maximum record length was 188.
+NOTE: There were 36 observations read from the data set WORK.AE_CHECK.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+36 records created in D:\Clinical-Case-Studies\Case_study_2\output\ae_check.csv from AE_CHECK.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\ae_check.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+5057  
+5058  
+5059  /*Overlapping Adverse Events:*/
+5060  
+5061  data ae_overlap ae_non_overlap;
+5062      set Modi_data;
+5063      retain prev_stop;
+5064  
+5065      if start_date < prev_stop then do;
+5066          output ae_overlap;  /* Overlapping records */
+5067      end;
+5068      else do;
+5069          output ae_non_overlap;  /* Non-overlapping records */
+5070      end;
+5071      prev_stop = end_date;
+5072  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.AE_OVERLAP has 68 observations and 28 variables.
+NOTE: The data set WORK.AE_NON_OVERLAP has 38 observations and 28 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+5073  
+5074  
+5075  %export_xls_csv(data=ae_overlap, xls_outfile=&output\ae_overlap.xls,
+5076  csv_outfile=&output\ae_overlap.csv, sheet=ae_overlap );
+
+NOTE: The export data set has 68 observations and 28 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\ae_overlap.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+5077   /**********************************************************************
+5078   *   PRODUCT:   SAS
+5079   *   VERSION:   9.4
+5080   *   CREATOR:   External File Interface
+5081   *   DATE:      21SEP24
+5082   *   DESC:      Generated SAS Datastep Code
+5083   *   TEMPLATE SOURCE:  (None Specified.)
+5084   ***********************************************************************/
+5085      data _null_;
+5086      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+5087      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+5088      file 'D:\Clinical-Case-Studies\Case_study_2\output\ae_overlap.csv' delimiter=',' DSD
+5088! DROPOVER lrecl=32767;
+5089      if _n_ = 1 then        /* write column names or labels */
+5090       do;
+5091         put
+5092            "Adverse_event"
+5093         ','
+5094            "patid"
+5095         ','
+5096            "visit_date"
+5097         ','
+5098            "start_date"
+5099         ','
+5100            "end_date"
+5101         ','
+5102            "BARCODE"
+5103         ','
+5104            "INV_NO"
+5105         ','
+5106            "PAGENO"
+5107         ','
+5108            "PROTO"
+5109         ','
+5110            "SEQ"
+5111         ','
+5112            "E_STAT"
+5113         ','
+5114            "VISIT"
+5115         ','
+5116            "WEIGHT"
+5117         ','
+5118            "WUNIT"
+5119         ','
+5120            "TEMP"
+5121         ','
+5122            "TUNIT"
+5123         ','
+5124            "RESP"
+5125         ','
+5126            "PR"
+5127         ','
+5128            "SYSBP"
+5129         ','
+5130            "DIABP"
+5131         ','
+5132            "HEIGHT"
+5133         ','
+5134            "HUNIT"
+5135         ','
+5136            "sex"
+5137         ','
+5138            "race"
+5139         ','
+5140            "BIRTHDT"
+5141         ','
+5142            "Screen_date"
+5143         ','
+5144            "status"
+5145         ','
+5146            "prev_stop"
+5147         ;
+5148       end;
+5149     set  AE_OVERLAP   end=EFIEOD;
+5150         format Adverse_event $16. ;
+5151         format patid best12. ;
+5152         format visit_date date9. ;
+5153         format start_date date9. ;
+5154         format end_date date9. ;
+5155         format BARCODE best12. ;
+5156         format INV_NO best12. ;
+5157         format PAGENO best12. ;
+5158         format PROTO $7. ;
+5159         format SEQ best12. ;
+5160         format E_STAT $1. ;
+5161         format VISIT $6. ;
+5162         format WEIGHT best12. ;
+5163         format WUNIT best12. ;
+5164         format TEMP best12. ;
+5165         format TUNIT best12. ;
+5166         format RESP best12. ;
+5167         format PR best12. ;
+5168         format SYSBP best12. ;
+5169         format DIABP best12. ;
+5170         format HEIGHT best12. ;
+5171         format HUNIT best12. ;
+5172         format sex $14. ;
+5173         format race $11. ;
+5174         format BIRTHDT mmddyy10. ;
+5175         format Screen_date date9. ;
+5176         format status $12. ;
+5177         format prev_stop best12. ;
+5178       do;
+5179         EFIOUT + 1;
+5180         put Adverse_event $ @;
+5181         put patid @;
+5182         put visit_date @;
+5183         put start_date @;
+5184         put end_date @;
+5185         put BARCODE @;
+5186         put INV_NO @;
+5187         put PAGENO @;
+5188         put PROTO $ @;
+5189         put SEQ @;
+5190         put E_STAT $ @;
+5191         put VISIT $ @;
+5192         put WEIGHT @;
+5193         put WUNIT @;
+5194         put TEMP @;
+5195         put TUNIT @;
+5196         put RESP @;
+5197         put PR @;
+5198         put SYSBP @;
+5199         put DIABP @;
+5200         put HEIGHT @;
+5201         put HUNIT @;
+5202         put sex $ @;
+5203         put race $ @;
+5204         put BIRTHDT @;
+5205         put Screen_date @;
+5206         put status $ @;
+5207         put prev_stop ;
+5208         ;
+5209       end;
+5210      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+5211      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+5212      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\ae_overlap.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\ae_overlap.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 69 records were written to the file 
+      'D:\Clinical-Case-Studies\Case_study_2\output\ae_overlap.csv'.
+      The minimum record length was 137.
+      The maximum record length was 198.
+NOTE: There were 68 observations read from the data set WORK.AE_OVERLAP.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+68 records created in D:\Clinical-Case-Studies\Case_study_2\output\ae_overlap.csv from AE_OVERLAP.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\ae_overlap.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+5213  %export_xls_csv(data=ae_non_overlap, xls_outfile=&output\ae_non_overlap.xls,
+5214  csv_outfile=&output\ae_non_overlap.csv, sheet=ae_non_overlap );
+
+NOTE: The export data set has 38 observations and 28 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\ae_non_overlap.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+5215   /**********************************************************************
+5216   *   PRODUCT:   SAS
+5217   *   VERSION:   9.4
+5218   *   CREATOR:   External File Interface
+5219   *   DATE:      21SEP24
+5220   *   DESC:      Generated SAS Datastep Code
+5221   *   TEMPLATE SOURCE:  (None Specified.)
+5222   ***********************************************************************/
+5223      data _null_;
+5224      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+5225      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+5226      file 'D:\Clinical-Case-Studies\Case_study_2\output\ae_non_overlap.csv' delimiter=',' DSD
+5226! DROPOVER lrecl=32767;
+5227      if _n_ = 1 then        /* write column names or labels */
+5228       do;
+5229         put
+5230            "Adverse_event"
+5231         ','
+5232            "patid"
+5233         ','
+5234            "visit_date"
+5235         ','
+5236            "start_date"
+5237         ','
+5238            "end_date"
+5239         ','
+5240            "BARCODE"
+5241         ','
+5242            "INV_NO"
+5243         ','
+5244            "PAGENO"
+5245         ','
+5246            "PROTO"
+5247         ','
+5248            "SEQ"
+5249         ','
+5250            "E_STAT"
+5251         ','
+5252            "VISIT"
+5253         ','
+5254            "WEIGHT"
+5255         ','
+5256            "WUNIT"
+5257         ','
+5258            "TEMP"
+5259         ','
+5260            "TUNIT"
+5261         ','
+5262            "RESP"
+5263         ','
+5264            "PR"
+5265         ','
+5266            "SYSBP"
+5267         ','
+5268            "DIABP"
+5269         ','
+5270            "HEIGHT"
+5271         ','
+5272            "HUNIT"
+5273         ','
+5274            "sex"
+5275         ','
+5276            "race"
+5277         ','
+5278            "BIRTHDT"
+5279         ','
+5280            "Screen_date"
+5281         ','
+5282            "status"
+5283         ','
+5284            "prev_stop"
+5285         ;
+5286       end;
+5287     set  AE_NON_OVERLAP   end=EFIEOD;
+5288         format Adverse_event $16. ;
+5289         format patid best12. ;
+5290         format visit_date date9. ;
+5291         format start_date date9. ;
+5292         format end_date date9. ;
+5293         format BARCODE best12. ;
+5294         format INV_NO best12. ;
+5295         format PAGENO best12. ;
+5296         format PROTO $7. ;
+5297         format SEQ best12. ;
+5298         format E_STAT $1. ;
+5299         format VISIT $6. ;
+5300         format WEIGHT best12. ;
+5301         format WUNIT best12. ;
+5302         format TEMP best12. ;
+5303         format TUNIT best12. ;
+5304         format RESP best12. ;
+5305         format PR best12. ;
+5306         format SYSBP best12. ;
+5307         format DIABP best12. ;
+5308         format HEIGHT best12. ;
+5309         format HUNIT best12. ;
+5310         format sex $14. ;
+5311         format race $11. ;
+5312         format BIRTHDT mmddyy10. ;
+5313         format Screen_date date9. ;
+5314         format status $12. ;
+5315         format prev_stop best12. ;
+5316       do;
+5317         EFIOUT + 1;
+5318         put Adverse_event $ @;
+5319         put patid @;
+5320         put visit_date @;
+5321         put start_date @;
+5322         put end_date @;
+5323         put BARCODE @;
+5324         put INV_NO @;
+5325         put PAGENO @;
+5326         put PROTO $ @;
+5327         put SEQ @;
+5328         put E_STAT $ @;
+5329         put VISIT $ @;
+5330         put WEIGHT @;
+5331         put WUNIT @;
+5332         put TEMP @;
+5333         put TUNIT @;
+5334         put RESP @;
+5335         put PR @;
+5336         put SYSBP @;
+5337         put DIABP @;
+5338         put HEIGHT @;
+5339         put HUNIT @;
+5340         put sex $ @;
+5341         put race $ @;
+5342         put BIRTHDT @;
+5343         put Screen_date @;
+5344         put status $ @;
+5345         put prev_stop ;
+5346         ;
+5347       end;
+5348      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+5349      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+5350      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\ae_non_overlap.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\ae_non_overlap.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:37,
+      Create Time=21 September 2024 23:27:37
+
+NOTE: 39 records were written to the file 
+      'D:\Clinical-Case-Studies\Case_study_2\output\ae_non_overlap.csv'.
+      The minimum record length was 147.
+      The maximum record length was 198.
+NOTE: There were 38 observations read from the data set WORK.AE_NON_OVERLAP.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+38 records created in D:\Clinical-Case-Studies\Case_study_2\output\ae_non_overlap.csv from 
+AE_NON_OVERLAP.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\ae_non_overlap.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+5351  
+5352  
+5353  
+5354  
+5355  /************************************Vitals**************************************/
+5356  
+5357  /* Vitals - Check Diastolic BP > Systolic BP*/
+5358  data bp_check;
+5359      set Modi_data;
+5360      if diabp > sysbp then output;
+5361  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.BP_CHECK has 10 observations and 27 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+5362  %export_xls_csv(data=bp_check, xls_outfile=&output\bp_check.xls,
+5363  csv_outfile=&output\bp_check.csv, sheet=bp_check);
+
+NOTE: The export data set has 10 observations and 27 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\bp_check.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+5364   /**********************************************************************
+5365   *   PRODUCT:   SAS
+5366   *   VERSION:   9.4
+5367   *   CREATOR:   External File Interface
+5368   *   DATE:      21SEP24
+5369   *   DESC:      Generated SAS Datastep Code
+5370   *   TEMPLATE SOURCE:  (None Specified.)
+5371   ***********************************************************************/
+5372      data _null_;
+5373      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+5374      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+5375      file 'D:\Clinical-Case-Studies\Case_study_2\output\bp_check.csv' delimiter=',' DSD DROPOVER
+5375! lrecl=32767;
+5376      if _n_ = 1 then        /* write column names or labels */
+5377       do;
+5378         put
+5379            "Adverse_event"
+5380         ','
+5381            "patid"
+5382         ','
+5383            "visit_date"
+5384         ','
+5385            "start_date"
+5386         ','
+5387            "end_date"
+5388         ','
+5389            "BARCODE"
+5390         ','
+5391            "INV_NO"
+5392         ','
+5393            "PAGENO"
+5394         ','
+5395            "PROTO"
+5396         ','
+5397            "SEQ"
+5398         ','
+5399            "E_STAT"
+5400         ','
+5401            "VISIT"
+5402         ','
+5403            "WEIGHT"
+5404         ','
+5405            "WUNIT"
+5406         ','
+5407            "TEMP"
+5408         ','
+5409            "TUNIT"
+5410         ','
+5411            "RESP"
+5412         ','
+5413            "PR"
+5414         ','
+5415            "SYSBP"
+5416         ','
+5417            "DIABP"
+5418         ','
+5419            "HEIGHT"
+5420         ','
+5421            "HUNIT"
+5422         ','
+5423            "sex"
+5424         ','
+5425            "race"
+5426         ','
+5427            "BIRTHDT"
+5428         ','
+5429            "Screen_date"
+5430         ','
+5431            "status"
+5432         ;
+5433       end;
+5434     set  BP_CHECK   end=EFIEOD;
+5435         format Adverse_event $16. ;
+5436         format patid best12. ;
+5437         format visit_date date9. ;
+5438         format start_date date9. ;
+5439         format end_date date9. ;
+5440         format BARCODE best12. ;
+5441         format INV_NO best12. ;
+5442         format PAGENO best12. ;
+5443         format PROTO $7. ;
+5444         format SEQ best12. ;
+5445         format E_STAT $1. ;
+5446         format VISIT $6. ;
+5447         format WEIGHT best12. ;
+5448         format WUNIT best12. ;
+5449         format TEMP best12. ;
+5450         format TUNIT best12. ;
+5451         format RESP best12. ;
+5452         format PR best12. ;
+5453         format SYSBP best12. ;
+5454         format DIABP best12. ;
+5455         format HEIGHT best12. ;
+5456         format HUNIT best12. ;
+5457         format sex $14. ;
+5458         format race $11. ;
+5459         format BIRTHDT mmddyy10. ;
+5460         format Screen_date date9. ;
+5461         format status $12. ;
+5462       do;
+5463         EFIOUT + 1;
+5464         put Adverse_event $ @;
+5465         put patid @;
+5466         put visit_date @;
+5467         put start_date @;
+5468         put end_date @;
+5469         put BARCODE @;
+5470         put INV_NO @;
+5471         put PAGENO @;
+5472         put PROTO $ @;
+5473         put SEQ @;
+5474         put E_STAT $ @;
+5475         put VISIT $ @;
+5476         put WEIGHT @;
+5477         put WUNIT @;
+5478         put TEMP @;
+5479         put TUNIT @;
+5480         put RESP @;
+5481         put PR @;
+5482         put SYSBP @;
+5483         put DIABP @;
+5484         put HEIGHT @;
+5485         put HUNIT @;
+5486         put sex $ @;
+5487         put race $ @;
+5488         put BIRTHDT @;
+5489         put Screen_date @;
+5490         put status $ ;
+5491         ;
+5492       end;
+5493      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+5494      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+5495      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\bp_check.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\bp_check.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:38,
+      Create Time=21 September 2024 23:27:38
+
+NOTE: 11 records were written to the file 'D:\Clinical-Case-Studies\Case_study_2\output\bp_check.csv'.
+      The minimum record length was 144.
+      The maximum record length was 188.
+NOTE: There were 10 observations read from the data set WORK.BP_CHECK.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+10 records created in D:\Clinical-Case-Studies\Case_study_2\output\bp_check.csv from BP_CHECK.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\bp_check.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.01 seconds
+      
+
+5496  
+5497  
+5498  /************************************Medical History **************************************/
+5499  
+5500  
+5501  /*Medical History - Visit Date before Screen Date*/
+5502  
+5503  data mh_check;
+5504      set Modi_data;
+5505      if visit_date < screen_date then output;
+5506  run;
+
+NOTE: There were 106 observations read from the data set WORK.MODI_DATA.
+NOTE: The data set WORK.MH_CHECK has 36 observations and 27 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+5507  
+5508  %export_xls_csv(data=mh_check, xls_outfile=&output\mh_check.xls,
+5509  csv_outfile=&output\mh_check.csv, sheet=mh_check);
+
+NOTE: The export data set has 36 observations and 27 variables.
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\mh_check.xls" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+5510   /**********************************************************************
+5511   *   PRODUCT:   SAS
+5512   *   VERSION:   9.4
+5513   *   CREATOR:   External File Interface
+5514   *   DATE:      21SEP24
+5515   *   DESC:      Generated SAS Datastep Code
+5516   *   TEMPLATE SOURCE:  (None Specified.)
+5517   ***********************************************************************/
+5518      data _null_;
+5519      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+5520      %let _EFIREC_ = 0;     /* clear export record count macro variable */
+5521      file 'D:\Clinical-Case-Studies\Case_study_2\output\mh_check.csv' delimiter=',' DSD DROPOVER
+5521! lrecl=32767;
+5522      if _n_ = 1 then        /* write column names or labels */
+5523       do;
+5524         put
+5525            "Adverse_event"
+5526         ','
+5527            "patid"
+5528         ','
+5529            "visit_date"
+5530         ','
+5531            "start_date"
+5532         ','
+5533            "end_date"
+5534         ','
+5535            "BARCODE"
+5536         ','
+5537            "INV_NO"
+5538         ','
+5539            "PAGENO"
+5540         ','
+5541            "PROTO"
+5542         ','
+5543            "SEQ"
+5544         ','
+5545            "E_STAT"
+5546         ','
+5547            "VISIT"
+5548         ','
+5549            "WEIGHT"
+5550         ','
+5551            "WUNIT"
+5552         ','
+5553            "TEMP"
+5554         ','
+5555            "TUNIT"
+5556         ','
+5557            "RESP"
+5558         ','
+5559            "PR"
+5560         ','
+5561            "SYSBP"
+5562         ','
+5563            "DIABP"
+5564         ','
+5565            "HEIGHT"
+5566         ','
+5567            "HUNIT"
+5568         ','
+5569            "sex"
+5570         ','
+5571            "race"
+5572         ','
+5573            "BIRTHDT"
+5574         ','
+5575            "Screen_date"
+5576         ','
+5577            "status"
+5578         ;
+5579       end;
+5580     set  MH_CHECK   end=EFIEOD;
+5581         format Adverse_event $16. ;
+5582         format patid best12. ;
+5583         format visit_date date9. ;
+5584         format start_date date9. ;
+5585         format end_date date9. ;
+5586         format BARCODE best12. ;
+5587         format INV_NO best12. ;
+5588         format PAGENO best12. ;
+5589         format PROTO $7. ;
+5590         format SEQ best12. ;
+5591         format E_STAT $1. ;
+5592         format VISIT $6. ;
+5593         format WEIGHT best12. ;
+5594         format WUNIT best12. ;
+5595         format TEMP best12. ;
+5596         format TUNIT best12. ;
+5597         format RESP best12. ;
+5598         format PR best12. ;
+5599         format SYSBP best12. ;
+5600         format DIABP best12. ;
+5601         format HEIGHT best12. ;
+5602         format HUNIT best12. ;
+5603         format sex $14. ;
+5604         format race $11. ;
+5605         format BIRTHDT mmddyy10. ;
+5606         format Screen_date date9. ;
+5607         format status $12. ;
+5608       do;
+5609         EFIOUT + 1;
+5610         put Adverse_event $ @;
+5611         put patid @;
+5612         put visit_date @;
+5613         put start_date @;
+5614         put end_date @;
+5615         put BARCODE @;
+5616         put INV_NO @;
+5617         put PAGENO @;
+5618         put PROTO $ @;
+5619         put SEQ @;
+5620         put E_STAT $ @;
+5621         put VISIT $ @;
+5622         put WEIGHT @;
+5623         put WUNIT @;
+5624         put TEMP @;
+5625         put TUNIT @;
+5626         put RESP @;
+5627         put PR @;
+5628         put SYSBP @;
+5629         put DIABP @;
+5630         put HEIGHT @;
+5631         put HUNIT @;
+5632         put sex $ @;
+5633         put race $ @;
+5634         put BIRTHDT @;
+5635         put Screen_date @;
+5636         put status $ ;
+5637         ;
+5638       end;
+5639      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+5640      if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+5641      run;
+
+NOTE: The file 'D:\Clinical-Case-Studies\Case_study_2\output\mh_check.csv' is:
+      Filename=D:\Clinical-Case-Studies\Case_study_2\output\mh_check.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=21 September 2024 23:27:38,
+      Create Time=21 September 2024 23:27:38
+
+NOTE: 37 records were written to the file 'D:\Clinical-Case-Studies\Case_study_2\output\mh_check.csv'.
+      The minimum record length was 144.
+      The maximum record length was 188.
+NOTE: There were 36 observations read from the data set WORK.MH_CHECK.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+36 records created in D:\Clinical-Case-Studies\Case_study_2\output\mh_check.csv from MH_CHECK.
+  
+  
+NOTE: "D:\Clinical-Case-Studies\Case_study_2\output\mh_check.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+5642  
+5643  /*Closing log file*/
+5644  proc printto;
+5645  run;
+

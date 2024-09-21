@@ -1,0 +1,204 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+288  
+289  
+290  /*Creating macros for convience directory changes*/
+291  %let output =D:\KiTel_CS\Case_study_7\output;
+292  %let RawData=D:\KiTel_CS\Case_study_7\RawData ;
+293  /*Creating permanent library*/
+294  
+295  libname output "&output" ;
+NOTE: Libref OUTPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_7\output
+296  libname mylib "&RawData" ;
+NOTE: Libref MYLIB was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_7\RawData
+297  
+298  proc format;
+299  value visitfmt 1="visit1" 2="visit2" 3="visit3" 4="visit4"
+300                  5="visit5" 6="visit6" 7="visit7";
+NOTE: Format VISITFMT is already on the library WORK.FORMATS.
+NOTE: Format VISITFMT has been output.
+301                  run;
+
+NOTE: PROCEDURE FORMAT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+302  
+303  data output.trt;
+304          set mylib.trt;
+305          drug=lowcase(drug);
+306          drug1=tranwrd(drug,'asp','IBPX');
+307          format visit visitfmt.;
+308  run;
+
+NOTE: There were 21 observations read from the data set MYLIB.TRT.
+NOTE: The data set OUTPUT.TRT has 21 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+309  
+310  ods listing close;
+311  ods rtf file="&output\trt.rtf" startpage=no;
+NOTE: Writing RTF Body file: D:\KiTel_CS\Case_study_7\output\trt.rtf
+312  
+313  title1 'Summary of Treatment';
+314  title2 'CCS007';
+315  title3 'Generate summary reports of treatment reports by using precedure tabulate';
+316  footnote1 " Naresh Reddy Akkaluri &sysday &sysdate";
+317  ods rtf startpage=no;
+318  proc tabulate data=output.trt;
+319          class lab;
+320          var sub;
+321          table lab="lab_Group_Group",sub*( N Mean);
+322  run;
+
+NOTE: There were 21 observations read from the data set OUTPUT.TRT.
+NOTE: PROCEDURE TABULATE used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+323  
+324  ods rtf startpage=now;
+325  proc tabulate data=output.trt;
+326          class visit drug1;
+327          var sub;
+328          table visit="visit"*drug1="drug",sub*(N Sum Mean Max Min Std);
+329          run;
+
+NOTE: There were 21 observations read from the data set OUTPUT.TRT.
+NOTE: PROCEDURE TABULATE used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+330  
+331  ods rtf close;
+332  ods listing;
+333  
+334  
+335  
+336  /*Adhoc Reports: ( If trainer requires)*/
+337  /*Importing rawdata trt2 xls  files into SAS datasets*/
+338  proc import datafile="&RawData\trt2.xls"
+339      out=output.trt2
+340      dbms=xls replace;
+341      getnames=yes;
+342  run;
+
+NOTE: One or more variables were converted because the data type is not supported by the V9 
+      engine. For more details, run with options MSGLEVEL=I.
+NOTE: The import data set has 24 observations and 7 variables.
+NOTE: OUTPUT.TRT2 data set was successfully created.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+343  
+344  
+345  
+346  
+347  ods listing close;
+348  ods rtf file="&output\trt2.rtf" startpage=no;
+NOTE: Writing RTF Body file: D:\KiTel_CS\Case_study_7\output\trt2.rtf
+349  
+350  title1 'Summary of Treatment';
+351  title2 'CCS007';
+352  title3 'Generate summary reports of treatment reports by using precedure tabulate';
+353  footnote1 " Naresh Reddy Akkaluri &sysday &sysdate";
+354  ods rtf startpage=no;
+355  proc tabulate data=output.trt2 ;
+356          class trt sex;
+357          table trt="TRT" all,
+358                    (sex="Gender(count)" all)*N
+359                    (sex="Gender(%)" all)*PctN/box=[label="Example of using PCTN"];
+360  run;
+
+NOTE: There were 24 observations read from the data set OUTPUT.TRT2.
+NOTE: PROCEDURE TABULATE used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+361  
+362  ods rtf startpage=now;
+363  proc tabulate data=output.trt2 ;
+364          class trt sex;
+365          var aval;
+366          table trt="TRT" all,
+367                    (sex="Gender(count)" all) * (aval="Lab_Group Result" *sum="Sum")
+368                    (sex="Gender(%)" all) * (aval="Lab_Group Result" *Pctsum="PctSum")
+369                    /box=[label="Example of using PCTSUM"];
+370  run;
+
+NOTE: There were 24 observations read from the data set OUTPUT.TRT2.
+NOTE: PROCEDURE TABULATE used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+371  
+372  ods rtf startpage=now;
+373  proc tabulate data=output.trt2 ;
+374          class trt sex;
+375          table trt="TRT" all,
+376                    (sex="Gender(Count)" all)*N
+377                    (sex="Gender(%)" all)*RowPctN
+378                    /box=[label="Example of using ROWPCTN"];
+379  run;
+
+NOTE: There were 24 observations read from the data set OUTPUT.TRT2.
+NOTE: PROCEDURE TABULATE used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+380  
+381  ods rtf startpage=now;
+382  proc tabulate data=output.trt2 ;
+383          class trt sex;
+384          var aval;
+385          table trt="TRT" all,
+386                    (sex="Gender(Count)" all) * (aval="Lab_Group Result" *Sum)
+387                    (sex="Gender(%)" all)*(aval="Lab_Group Result" *rowpctsum="RowPctSum")
+388                    /box=[label="Example of using ROWPCTSUM"];
+389                    run;
+
+NOTE: There were 24 observations read from the data set OUTPUT.TRT2.
+NOTE: PROCEDURE TABULATE used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.00 seconds
+      
+
+390  
+391  ods rtf startpage=now;
+392  
+393  proc tabulate data=output.trt2 ;
+394          class site trt sex avisit;
+395          table site="Site"*(trt="TRT" all),
+396                    avisit*(sex all)*PctN <trt*sex trt*all sex*all all>=" ";
+397                    run;
+
+NOTE: There were 24 observations read from the data set OUTPUT.TRT2.
+NOTE: PROCEDURE TABULATE used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+398  ods rtf close;
+399  ods listing;
+400  
+401  proc printto;
+402  run;
+

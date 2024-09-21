@@ -1,0 +1,10 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+705  %let output =D:\KiTel_CS\Case_study_4\output;
+706  %let output =D:\KiTel_CS\Case_study_4\output;
+707  proc printto log= "&output\CCS004.log" new;
+708  run;
+

@@ -1,0 +1,5 @@
+pat,dscat
+105,withdraw
+111,administrative problem
+112,adverse event
+117,lost followup

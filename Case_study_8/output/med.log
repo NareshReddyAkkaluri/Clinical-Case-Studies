@@ -1,0 +1,141 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+533  
+534  
+535  /*Creating macros for convience directory changes*/
+536  %let output =D:\KiTel_CS\Case_study_8\output;
+537  %let RawData=D:\KiTel_CS\Case_study_8\RawData ;
+538  /*Creating permanent library*/
+539  
+540  libname output "&output" ;
+NOTE: Libref OUTPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_8\output
+541  libname mylib "&RawData" ;
+ERROR: Unable to clear or re-assign the library MYLIB because it is still in use.
+ERROR: Error in the LIBNAME statement.
+542  /*Importing dataset*/
+543  
+544  data output.med;
+545  set mylib.trtmentr;
+546  run;
+
+NOTE: There were 18 observations read from the data set MYLIB.TRTMENTR.
+NOTE: The data set OUTPUT.MED has 18 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+547  
+548  /*Sorting the dataset*/
+549  proc sort data=output.med;
+550  by lab;
+551  run;
+
+NOTE: There were 18 observations read from the data set OUTPUT.MED.
+NOTE: The data set OUTPUT.MED has 18 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+552  
+553  /*Generating rtf file*/
+554  ods listing close;
+555  ods rtf file="&output\med.rtf" startpage=no;
+NOTE: Writing RTF Body file: D:\KiTel_CS\Case_study_8\output\med.rtf
+556  
+557  /*Assigning titles and footnotes as per mock output*/
+558  title "Summary medication table";
+559  footnote "****************************";
+560  options pageno=1;
+561  
+562  /*table 1*/
+563  ods rtf startpage=now;
+564  proc report data=output.med;
+565  column lab drug sub;
+566  define lab/group;
+567  define drug/group;
+568  define sub/analysis;
+569  break after lab/summarize;
+570  rbreak after/summarize;
+571  run;
+
+NOTE: There were 18 observations read from the data set OUTPUT.MED.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+572  
+573  /*table 2*/
+574  ods startpage=now;
+575  proc report data=output.med;
+576  column lab (drug, sub) total;
+577  define lab/group "lab" center;
+578  define drug/across;
+579  define total/computed;
+580  compute total;
+581  total=_c2_+_c3_+_c4_+_c5_;
+582  endcomp;
+583  compute after;
+584  line " ";
+585  line " ";
+586  line "this data belongs to phase4";
+587  endcomp;
+588  run;
+
+NOTE: There were 18 observations read from the data set OUTPUT.MED.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+589  
+590  /*table 3*/
+591  ods rtf startpage=now;
+592  proc report data=output.med;
+593  column lab (drug,sub) total;
+594  define lab/group "lab";
+595  define drug/across;
+596  define total/computed;
+597  compute total;
+598  total=_c2_+_c3_+_c4_+_c5_;
+599  endcomp;
+600  compute before;
+601  line " ";
+602  line " ";
+603  line "this data belongs to oncology";
+604  line " ";
+605  line "phase 4 trials";
+606  line " ";
+607  line " ";
+608  endcomp;
+609  compute after;
+610  line " ";
+611  line " ";
+612  line "this data belongs to phase4";
+613  line " ";
+614  line " ";
+615  endcomp;
+616  run;
+
+NOTE: There were 18 observations read from the data set OUTPUT.MED.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+617  
+618  /*closing rtf file*/
+619  ods rtf close;
+620  ods listing;
+621  
+622  /*Closing printto statement*/
+623  proc printto;
+624  run;
+

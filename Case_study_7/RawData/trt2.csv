@@ -1,0 +1,25 @@
+SUBJID ,SEX ,SITE ,TRT ,AVISIT ,PARAMCD ,AVAL 
+51063,F ,USA ,Placebo ,Week 0 ,ALT ,9
+51063,F ,USA ,Placebo ,Week 0 ,AST ,10
+51063,F ,USA ,Placebo ,Week 4 ,ALT ,11
+51063,F ,USA ,Placebo ,Week 4 ,AST ,10
+51068,F ,USA ,Study drug ,Week 0 ,ALT ,11
+51068,F ,USA ,Study drug ,Week 0 ,AST ,16
+51068,F ,USA ,Study drug ,Week 4 ,ALT ,11
+51068,F ,USA ,Study drug ,Week 4 ,AST ,13
+51077,M ,USA ,Placebo ,Week 0 ,ALT ,13
+51077,M ,USA ,Placebo ,Week 0 ,AST ,10
+51077,M ,USA ,Placebo ,Week 4 ,ALT ,10
+51077,M ,USA ,Placebo ,Week 4 ,AST ,9
+51112,F ,Ex-USA ,Placebo ,Week 0 ,ALT ,22
+51112,F ,Ex-USA ,Placebo ,Week 0 ,AST ,17
+51112,F ,Ex-USA ,Placebo ,Week 4 ,ALT ,22
+51112,F ,Ex-USA ,Placebo ,Week 4 ,AST ,18
+51230,M ,USA ,Placebo ,Week 0 ,ALT ,18
+51230,M ,USA ,Placebo ,Week 0 ,AST ,14
+51230,M ,USA ,Placebo ,Week 4 ,ALT ,17
+51230,M ,USA ,Placebo ,Week 4 ,AST ,14
+51248,M ,Ex-USA ,Study drug ,Week 0 ,ALT ,25
+51248,M ,Ex-USA ,Study drug ,Week 0 ,AST ,19
+51248,M ,Ex-USA ,Study drug ,Week 4 ,ALT ,25
+51248,M ,Ex-USA ,Study drug ,Week 4 ,AST ,17

@@ -1,0 +1,346 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1036  
+1037  
+1038  /*Creating macros for convience directory changes*/
+1039  %let output =D:\KiTel_CS\Case_study_6\output;
+1040  %let RawData=D:\KiTel_CS\Case_study_6\RawData ;
+1041  /*Creating permanent library*/
+1042  
+1043  libname output "&output" ;
+NOTE: Libref OUTPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_6\output
+1044  
+1045  /*Importing rawdata xls and csv files into SAS datasets*/
+1046  proc import datafile="&RawData\SL.xls"
+1047      out=SL_Raw
+1048      dbms=xls replace;
+1049      range="Sheet1$A4:Z";
+1050      getnames=yes;
+1051  run;
+
+NOTE: One or more variables were converted because the data type is not supported by the V9 engine. 
+      For more details, run with options MSGLEVEL=I.
+NOTE: The import data set has 26 observations and 9 variables.
+NOTE: WORK.SL_RAW data set was successfully created.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1052  
+1053  proc sql;
+1054      create table Sl_le as
+1055      select *
+1056      from SL_Raw(drop=I);
+NOTE: Table WORK.SL_LE created, with 26 rows and 8 columns.
+
+1056!                           * Replace <variable_name> with the actual name of the variable you
+1056! want to drop;
+1057  quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1058  
+1059  proc import datafile="&RawData\Base.csv"
+1060      out=base
+1061      dbms=csv replace;
+1062      getnames=yes;  * Assumes the first row contains column names;
+1063  run;
+
+1064   /**********************************************************************
+1065   *   PRODUCT:   SAS
+1066   *   VERSION:   9.4
+1067   *   CREATOR:   External File Interface
+1068   *   DATE:      21SEP24
+1069   *   DESC:      Generated SAS Datastep Code
+1070   *   TEMPLATE SOURCE:  (None Specified.)
+1071   ***********************************************************************/
+1072      data WORK.BASE    ;
+1073      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+1074      infile 'D:\KiTel_CS\Case_study_6\RawData\Base.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+1074! firstobs=2 ;
+1075         informat Name $7. ;
+1076         informat Height best32. ;
+1077         informat subject best32. ;
+1078         informat site best32. ;
+1079         format Name $7. ;
+1080         format Height best12. ;
+1081         format subject best12. ;
+1082         format site best12. ;
+1083      input
+1084                  Name  $
+1085                  Height
+1086                  subject
+1087                  site
+1088      ;
+1089      if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+1090      run;
+
+NOTE: The infile 'D:\KiTel_CS\Case_study_6\RawData\Base.csv' is:
+      Filename=D:\KiTel_CS\Case_study_6\RawData\Base.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=349,
+      Last Modified=23 August 2024 10:15:24,
+      Create Time=07 September 2024 17:50:41
+
+NOTE: 20 records were read from the infile 'D:\KiTel_CS\Case_study_6\RawData\Base.csv'.
+      The minimum record length was 11.
+      The maximum record length was 16.
+NOTE: The data set WORK.BASE has 20 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+20 rows created in WORK.BASE from D:\KiTel_CS\Case_study_6\RawData\Base.csv.
+  
+  
+  
+NOTE: WORK.BASE data set was successfully created.
+NOTE: The data set WORK.BASE has 20 observations and 4 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.00 seconds
+      
+
+1091  
+1092  
+1093  /*Merging of dataset*/
+1094  proc sort data=base out=base_sort;
+1095  by subject site;
+1096  run;
+
+NOTE: There were 20 observations read from the data set WORK.BASE.
+NOTE: The data set WORK.BASE_SORT has 20 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1097  
+1098  proc sort data=sl_le out=SL_sort;
+1099  by subjectid site;
+1100  run;
+
+NOTE: There were 26 observations read from the data set WORK.SL_LE.
+NOTE: The data set WORK.SL_SORT has 26 observations and 8 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1101  
+1102  
+1103  
+1104  data merges;
+1105  merge base_sort(in=a) SL_sort(in=b rename=(subjectid=subject));
+1106  by subject site;
+1107  if a;
+1108  run;
+
+NOTE: There were 20 observations read from the data set WORK.BASE_SORT.
+NOTE: There were 26 observations read from the data set WORK.SL_SORT.
+NOTE: The data set WORK.MERGES has 24 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1109  
+1110  
+1111  /*----------------------------------------Task1-------------------------------------*/
+1112  
+1113  
+1114  /*Remove duplicate subject from data if site also same and store duplicate patient data*/
+1115  proc sort data=merges out=merges_sort nodupkey dupout=output.SL_dup;
+1116  by subject site;
+1117  run;
+
+NOTE: There were 24 observations read from the data set WORK.MERGES.
+NOTE: 5 observations with duplicate key values were deleted.
+NOTE: The data set WORK.MERGES_SORT has 19 observations and 10 variables.
+NOTE: The data set OUTPUT.SL_DUP has 5 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1118  
+1119  
+1120  data task2;
+1121  set merges_sort;
+1122  /*for startdate*/
+1123  /*for date missing when month bw jan to jun consider 01*/
+1124  if scan(startdate,1,':') eq "unk" and scan(startdate,2,':') in('01','02','03','04','05','06')
+1124! then do;
+1125  substr(startdate,1,3)='01';
+1126  end;
+1127  /*for date missing when month bw July to Dec consider 30*/
+1128  else if scan(startdate,1,':') eq "unk" and scan(startdate,2,':')
+1128! in('07','08','09','10','11','12') then do;
+1129  substr(startdate,1,3)='30';
+1130  end;
+1131  
+1132  /*If Month missing considers it as 01 when date in between 1 to 15*/
+1133  if scan(startdate,2,':')eq "unk" and
+1133! scan(startdate,1,':')in('01','02','03','04','05','06','07','08','09','10','11','12','13','14','1
+1133! 5') then do;
+1134  substr(startdate,4,3)='01';
+1135  end;
+1136  /*If Month missing considers it as 12 when date in between 16 to 31*/
+1137  else if scan(startdate,2,':') eq "unk" and scan(startdate,1,':') in
+1137! ('16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31') then do;
+1138  substr(startdate,4,3)='12';
+1139  end;
+1140  
+1141  /*for null in time*/
+1142  if index(startdate,"null") ne 0 then do;  /*fun replaces "null" with "00" in the time part of
+1142! the startdat*/
+1143  startdate=tranwrd(startdate,"null","00");
+1144  end;
+1145  
+1146  
+1147  /*for both date and month are unk replace 01*/
+1148  if scan(startdate,1,':') eq "unk" and scan(startdate,2,':') eq "unk" then do;
+1149  substr(startdate,1,3)="01";
+1150  substr(startdate,5,3)="01";
+1151  end;
+1152  
+1153  
+1154  /*for birthdate*/
+1155  /*for  date missing when month bw jan to jun consider 01*/
+1156  if scan(birthdate,1,'/') eq "unk" and scan(birthdate,2,'/')
+1156! in('4','01','02','03','04','05','06') then do;
+1157  substr(birthdate,1,3)='01';
+1158  end;
+1159  /*for date missing when month bw July to Dec consider 30*/
+1160  else if scan(birthdate,1,'/') eq "unk" and scan(birthdate,2,'/')
+1160! in('07','08','09','10','11','12') then do;
+1161  substr(birthdate,1,3)='30';
+1162  end;
+1163  
+1164  /*for month*/
+1165  if scan(birthdate,2,'/')eq "unk" and
+1165! scan(birthdate,1,'/')in('01','02','03','04','05','06','07','08','09','10','11','12','13','14','1
+1165! 5') then do;
+1166  substr(birthdate,5,3)='01';
+1167  end;
+1168  else if scan(birthdate,2,'/') eq "unk" and scan(birthdate,1,'/') in
+1168! ('16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31') then do;
+1169  substr(birthdate,5,3)='12';
+1170  end;
+1171  else if scan(birthdate,2,'/') eq "unk" and scan(birthdate,1,'/') in('1','4') then do;
+1172  substr(birthdate,3,3)='01';
+1173  end;
+1174  startdate=compress(startdate);
+1175  run;
+
+NOTE: There were 19 observations read from the data set WORK.MERGES_SORT.
+NOTE: The data set WORK.TASK2 has 19 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+1176  
+1177  
+1178  /*--------------------44444
+1178! date9.--------------------Task3-------------------------------------*/
+1179  
+1180  
+1181  data task3;
+1182      set task2;
+1183  
+1184  start_date=datepart(input(startdate,anydtdtm.));
+1185  end_date=datepart(input(enddate,anydtdtm.));
+1186  
+1187  
+1188  /*birth_date=input(compress(birthdate),mmddyy10.);*/
+1189  
+1190  /* Clean birthdate variable */
+1191      birthdate = compress(birthdate);
+1192  
+1193      /* Initialize birth_date to missing */
+1194      birth_date = .;
+1195  
+1196      /* Determine format and convert birthdate */
+1197      if index(birthdate, '/') then do;
+1198          /* Format is MM/DD/YYYY */
+1199          birth_date= input(birthdate, mmddyy10.);
+1200      end;
+1201      else if length(birthdate) in (5, 6) then do;
+1202          /* Numeric SAS date format */
+1203          /* Assuming format "22006" is the number of days since 01JAN1960 */
+1204          birth_date = input(birthdate, 5.);
+1205      end;
+1206      else do;
+1207          /* Invalid format */
+1208          birth_date = .;
+1209      end;
+1210  
+1211  format start_date birth_date end_date date9.;
+1212  
+1213  
+1214  if start_date ne . and birth_date ne . then
+1215  age=intck('year',birth_date,start_date) ;
+1216  
+1217  /*Calculating Days, Months and Years*/
+1218  if start_date ne . and end_date ne . then do;
+1219  days=intck('day',start_date,end_date);
+1220  months=intck('month',start_date,end_date);
+1221  years=intck('year',start_date,end_date);
+1222  end;
+1223  
+1224  
+1225  /*Round the weight variable with 1 decimal value*/
+1226  /* Remove "kg" and any other non-numeric characters */
+1227  wt = compress(wt, "kg");
+1228  /* Convert the cleaned weight to numeric */
+1229  wt_num = input(wt, ?? 8.2); /* Use ?? to avoid errors from invalid input */
+1230  /* Round the numeric weight to one decimal place */
+1231  if wt_num ne . then wt_num = round(wt_num, 0.1);
+1232  
+1233  /*Labelling Day,Month, Years and Weight*/
+1234  label days="No. of Days"
+1235  months="No. of Months"
+1236  years="No. of Years"
+1237  wt="Weight (in kgs)"
+1238  ;
+1239  run;
+
+NOTE: Missing values were generated as a result of performing an operation on missing values.
+      Each place is given by: (Number of times) at (Line):(Column).
+      3 at 1184:12   3 at 1185:10   
+NOTE: There were 19 observations read from the data set WORK.TASK2.
+NOTE: The data set WORK.TASK3 has 19 observations and 18 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1240  
+1241  /*----------------------------------------Task4-------------------------------------*/
+1242  /*DECODE DATA */
+1243  data output.sl;
+1244  set task3;
+1245  if upcase(sex)in ('M','MALE') then sex='Male';
+1246  else if upcase(sex) in ('F','FEMALE') then sex='Female';
+1247  run;
+
+NOTE: There were 19 observations read from the data set WORK.TASK3.
+NOTE: The data set OUTPUT.SL has 19 observations and 18 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1248  /*Closing log file*/
+1249  proc printto;
+1250  run;
+

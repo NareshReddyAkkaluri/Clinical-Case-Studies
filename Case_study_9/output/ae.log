@@ -1,0 +1,246 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+93   
+94   
+95   /*Creating macros for convience directory changes*/
+96   %let output =D:\KiTel_CS\Case_study_9\output;
+97   %let RawData=D:\KiTel_CS\Case_study_9\RawData ;
+98   /*Creating permanent library*/
+99   
+100  libname output "&output" ;
+NOTE: Libref OUTPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_9\output
+101  
+102  /*Importing dataset*/
+103  
+104  proc import datafile="&RawData\ADAE_AA.xls"
+105      out=Adae
+106      dbms=xls replace;
+107      getnames=yes;
+108  run;
+
+NOTE: One or more variables were converted because the data type is not supported by the V9 
+      engine. For more details, run with options MSGLEVEL=I.
+NOTE: The import data set has 90 observations and 6 variables.
+NOTE: WORK.ADAE data set was successfully created.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+109  
+110  /* duplicate key values were deleted and stored in adae_dummy dataset*/
+111  proc sort data=Adae nodupkey dupout=output.adae_dummy out=sorted_adae;
+112          by usubjid aebodsys;
+113  run;
+
+NOTE: There were 90 observations read from the data set WORK.ADAE.
+NOTE: 33 observations with duplicate key values were deleted.
+NOTE: The data set OUTPUT.ADAE_DUMMY has 33 observations and 6 variables.
+NOTE: The data set WORK.SORTED_ADAE has 57 observations and 6 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+114  
+115  
+116  proc freq data=sorted_adae ;
+117          tables TRT01A/out=freq1;
+118  run;
+
+NOTE: There were 57 observations read from the data set WORK.SORTED_ADAE.
+NOTE: The data set WORK.FREQ1 has 3 observations and 3 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+119  
+120  data freq1_conc(drop=count percent);
+121          set freq1;
+122          indent="Number of subjects with at least one adverse event";
+123          number= put(count,1.)|| "(" || compress(put(percent,5.1)) || ")" ;
+124  run;
+
+NOTE: There were 3 observations read from the data set WORK.FREQ1.
+NOTE: The data set WORK.FREQ1_CONC has 3 observations and 3 variables.
+NOTE: At least one W.D format was too small for the number to be printed. The decimal may be 
+      shifted by the "BEST" format.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+125  
+126  proc transpose data=freq1_conc out=tran_freq1 prefix=trt;
+127          var number;
+128          id trt01a;
+129          by indent;
+130  run;
+
+NOTE: There were 3 observations read from the data set WORK.FREQ1_CONC.
+NOTE: The data set WORK.TRAN_FREQ1 has 1 observations and 5 variables.
+NOTE: PROCEDURE TRANSPOSE used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+131  
+132  proc freq data=sorted_adae;
+133          tables trt01a*aebodsys/out=freq2(rename=(count=count1) drop=percent);
+134  run;
+
+NOTE: There were 57 observations read from the data set WORK.SORTED_ADAE.
+NOTE: The data set WORK.FREQ2 has 26 observations and 3 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.00 seconds
+      
+
+135  
+136  data freq_f(drop=percent count count1);
+137          merge freq1 freq2;
+138          by trt01a;
+139          number= put(count1,1.)|| "(" || put(count1/count*100,5.1) || ")" ;
+140  run;
+
+NOTE: There were 3 observations read from the data set WORK.FREQ1.
+NOTE: There were 26 observations read from the data set WORK.FREQ2.
+NOTE: The data set WORK.FREQ_F has 26 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+141  
+142  proc sort data=freq_f out=sort_freq_f;
+143          by aebodsys;
+144  run;
+
+NOTE: There were 26 observations read from the data set WORK.FREQ_F.
+NOTE: The data set WORK.SORT_FREQ_F has 26 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+145  
+146  proc transpose data=sort_freq_f out=trans_frq_f prefix=trt;
+147          var number;
+148          by aebodsys;
+149          id trt01a;
+150  run;
+
+NOTE: There were 26 observations read from the data set WORK.SORT_FREQ_F.
+NOTE: The data set WORK.TRANS_FRQ_F has 14 observations and 5 variables.
+NOTE: PROCEDURE TRANSPOSE used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+151  
+152  proc sort data=adae nodupkey out=sort_adae;
+153          by usubjid aedecod aebodsys;
+154  run;
+
+NOTE: There were 90 observations read from the data set WORK.ADAE.
+NOTE: 9 observations with duplicate key values were deleted.
+NOTE: The data set WORK.SORT_ADAE has 81 observations and 6 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+155  
+156  proc freq data=sort_adae ;
+157          tables trt01a*aebodsys*aedecod/out=freq3(rename=(count=count1));
+158  run;
+
+NOTE: There were 81 observations read from the data set WORK.SORT_ADAE.
+NOTE: The data set WORK.FREQ3 has 64 observations and 5 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.24 seconds
+      cpu time            0.18 seconds
+      
+
+159  
+160  data merge_freq(drop=count1 percent);
+161          merge freq1 freq3;
+162          by trt01a;
+163          number= put(count1,1.)|| "(" || put(count1/count*100,5.1) || ")" ;
+164  run;
+
+NOTE: There were 3 observations read from the data set WORK.FREQ1.
+NOTE: There were 64 observations read from the data set WORK.FREQ3.
+NOTE: The data set WORK.MERGE_FREQ has 64 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+165  proc sort data=merge_freq out=frequency;
+166          by aebodsys aedecod;
+167  run;
+
+NOTE: There were 64 observations read from the data set WORK.MERGE_FREQ.
+NOTE: The data set WORK.FREQUENCY has 64 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+168  proc transpose data= frequency out=trans_frequency prefix=trt;
+169          var number;
+170          id trt01a;
+171          by aebodsys aedecod;
+172  run;
+
+NOTE: There were 64 observations read from the data set WORK.FREQUENCY.
+NOTE: The data set WORK.TRANS_FREQUENCY has 46 observations and 6 variables.
+NOTE: PROCEDURE TRANSPOSE used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+173  
+174  data output.ae;
+175          retain indent trtC trtB trtA;
+176          set tran_freq1 trans_frq_f trans_frequency;
+177          array miss(3) $ trtA trtB trtC;
+178          do i=1 to 3;
+179                  if miss(i)=" " then miss(i)="0";
+180          end;
+181          if aebodsys ne " " and aedecod=" " then indent=aebodsys;
+182          if aedecod ne " " then indent=" " || aedecod;
+183  run;
+
+NOTE: There were 1 observations read from the data set WORK.TRAN_FREQ1.
+NOTE: There were 14 observations read from the data set WORK.TRANS_FRQ_F.
+NOTE: There were 46 observations read from the data set WORK.TRANS_FREQUENCY.
+NOTE: The data set OUTPUT.AE has 61 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+184  
+185  proc sort data=output.ae (drop=_name_ aedecod i);
+186          by aebodsys;
+187  run;
+
+NOTE: There were 61 observations read from the data set OUTPUT.AE.
+NOTE: The data set OUTPUT.AE has 61 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+188  
+189  proc printto;
+190  run;
+

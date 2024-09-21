@@ -1,0 +1,38 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+709  proc datasets lib=work kill;
+                                              Directory
+
+Libref             WORK                                                                              
+Engine             V9                                                                                
+Physical Name      C:\Users\NARESH~1\AppData\Local\Temp\SAS Temporary Files\_TD26988_LAPTOP-7VM8T73J_
+Filename           C:\Users\NARESH~1\AppData\Local\Temp\SAS Temporary Files\_TD26988_LAPTOP-7VM8T73J_
+Owner Name         LAPTOP-7VM8T73J\NARESH REDDY                                                      
+File Size          12KB                                                                              
+File Size (bytes)  12288                                                                             
+
+
+                                Member
+                    #  Name     Type        File Size  Last Modified
+
+                    1  SASMACR  CATALOG          29KB  21/09/2024 22:18:52        
+NOTE: Deleting WORK.SASMACR (memtype=CATALOG).
+NOTE: File WORK.SASMACR (memtype=CATALOG) cannot be deleted because it is in use.
+710  quit;
+
+NOTE: PROCEDURE DATASETS used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+711  libname _all_ clear;
+NOTE: Libref MYLIB has been deassigned.
+NOTE: Libref OUTPUT has been deassigned.
+NOTE: Libref INPUT has been deassigned.
+
+712  proc printto log= "&output\sc.log" new;
+713  run;
+

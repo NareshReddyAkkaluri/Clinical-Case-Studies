@@ -1,0 +1,115 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+434  
+435  
+436  /*Creating macros for convience directory changes*/
+437  %let output =D:\KiTel_CS\Case_study_10\output;
+438  %let RawData=D:\KiTel_CS\Case_study_10\RawData ;
+439  /*Creating permanent library*/
+440  
+441  libname output "&output" ;
+ERROR: Unable to clear or re-assign the library OUTPUT because it is still in use.
+ERROR: Error in the LIBNAME statement.
+442  libname input "&RawData" ;
+NOTE: Libref INPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_10\RawData
+443  
+444  /*Generating graph in jpeg format*/
+445  goption device=jpeg;
+446  
+447  
+448  /*Generating rft file*/
+449  ods listing close;
+450  ods rtf file="&output\graph.rft" startpage=no;
+NOTE: Writing RTF Body file: D:\KiTel_CS\Case_study_10\output\graph.rft
+451  ods rtf startpage=now;
+452  goptions  hsize=2 vsize=3 csymbol=red;
+NOTE: No units specified for the HSIZE option.  INCHES will be used.
+NOTE: No units specified for the VSIZE option.  INCHES will be used.
+453  title 'Sales per month';
+454  footnote 'Generated &sysdate. &sysday.';
+455  proc gchart data=input.profit;
+456  vbar month/sumvar=sales discrete;
+457  pattern1 c=red;
+458  run;
+
+NOTE: Graph written to C:\Users\NARESH REDDY\gchart14.jpg
+459  quit;
+
+NOTE: There were 5 observations read from the data set INPUT.PROFIT.
+NOTE: PROCEDURE GCHART used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.04 seconds
+      
+
+460  ods rtf startpage=now;
+461  
+462  /*graph 2*/
+463  proc format;
+464  value mnth
+465  1='Jan' 2='Feb' 3='Mar' 4='Apr' 5='May';
+NOTE: Format MNTH is already on the library WORK.FORMATS.
+NOTE: Format MNTH has been output.
+466  run;
+
+NOTE: PROCEDURE FORMAT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+467  
+468  legend1 across=5 down=1
+469  position=(bottom center outside)
+470  shape=bar(0.5,0.25)cm
+471  label=(j=l "month")
+472  value=(tick=1 "Jan" tick=2 "Feb" tick=3 "Mar" tick=4 "Apr" tick=5 "May");
+473  proc gchart data=input.profit;
+474  vbar month/sumvar=sales discrete subgroup=month space=2 width=4;
+475  format month mnth.;
+476  pattern1 c=blue v=s;
+477  pattern2 c=blue v=e;
+478  pattern3 c=blue v=l3;
+479  pattern4 c=blue v=r1;
+480  pattern5 c=blue v=x3;
+481  run;
+
+NOTE: Graph written to C:\Users\NARESH REDDY\gchart15.jpg
+482  quit;
+
+NOTE: There were 5 observations read from the data set INPUT.PROFIT.
+NOTE: PROCEDURE GCHART used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.03 seconds
+      
+
+483  
+484  ods rtf startpage=now;
+485  /*graph 3*/
+486  proc gchart data=input.totals;
+487  vbar site/sumvar=sales type=mean discrete subgroup=site space=2 width=4 nolegend;
+488  format sales dollar6.;
+489  pattern1 c=blue v=s;
+490  pattern2 c=blue v=s;
+491  pattern3 c=blue v=s;
+492  run;
+
+NOTE: Graph written to C:\Users\NARESH REDDY\gchart16.jpg
+493  quit;
+
+NOTE: There were 6 observations read from the data set INPUT.TOTALS.
+NOTE: PROCEDURE GCHART used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.04 seconds
+      
+
+494  ods rtf close;
+495  ods listing;
+496  
+497  /*closing log file*/
+498  proc printto;
+499  run;
+

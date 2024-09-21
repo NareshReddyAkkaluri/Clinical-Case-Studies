@@ -1,0 +1,1 @@
+Adverse_event,patid,visit_date,start_date,end_date,BARCODE,INV_NO,PAGENO,PROTO,SEQ,E_STAT,VISIT,WEIGHT,WUNIT,TEMP,TUNIT,RESP,PR,SYSBP,DIABP,HEIGHT,HUNIT,sex,race,BIRTHDT,Screen_date,status

@@ -1,0 +1,22 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+573  data output.incl;
+574  set eligibility;
+ERROR: File WORK.ELIGIBILITY.DATA does not exist.
+575  if criteria='inc';
+576  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+WARNING: The data set OUTPUT.INCL may be incomplete.  When this step was stopped there were 0 
+         observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+577  proc printto;
+578  run;
+

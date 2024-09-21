@@ -1,0 +1,29 @@
+pat,visit,sex,age,location,Status,criteria,criteria_des
+101,screening,male,34,us,h,inc,Fasted plasma glucose 126 mg/dL
+127,screening,male,54,us,h,exl,Malignoms     
+102,screening,female,67,us,h,inc,Plasma glucose levels 240 mg/dL 2 hours after OGT 
+103,screening,male,55,us,h,inc,Plasma glucose levels 210 mg/dL 2 hours after OGT
+104,screening,male,33,us,h,inc,Endothelial dysfunction defined by FMD <4%
+105,screening,female,51,us,h,inc,Endothelial dysfunction defined by FMD <4% 
+106,screening,male,87,us,h,inc,Endothelial dysfunction defined by FMD <4%
+107,screening,male,29,us,h,exl,Ejection fraction <30%
+127,screening,male,66,us,h,inc,Endothelial dysfunction defined by FMD <4%  
+108,screening,female,45,us,h,exl,Malignoms  
+109,screening,male,77,us,h,inc,No changes of medication for 2 months 
+110,screening,male,44,us,h,inc,Casual plasma glucose greater than 200 mg/dL combined with diabetic symptoms.
+114,screening,female,65,us,h,inc,Fasted plasma glucose 136 mg/dL
+111,screening,female,78,us,p,inc,Fasted plasma glucose 140 mg/dL
+112,screening,male,22,us,p,inc,No changes of medication for 2 months
+113,screening,female,34,us,h,exl,Ejection fraction 40% 
+114,screening,male,77,us,p,inc,No changes of medication for 2 months 
+115,screening,male,49,us,p,exl,PAOD (level IV)
+125,screening,female,55,us,h,inc,Plasma glucose levels 210 mg/dL 2 hours after OGT
+116,screening,male,33,us,h,inc,Endothelial dysfunction defined by FMD <4%
+117,screening,male,51,us,h,inc,Endothelial dysfunction defined by FMD <4% 
+118,screening,male,87,us,h,inc,Endothelial dysfunction defined by FMD <4%
+119,screening,male,54,us,h,exl,Malignoms     
+120,screening,female,67,us,h,inc,Plasma glucose levels 240 mg/dL 2 hours after OGT
+121,screening,male,44,us,h,inc,Casual plasma glucose greater than 200 mg/dL combined with diabetic symptoms.
+122,screening,female,65,us,h,inc,Fasted plasma glucose 136 mg/dL
+123,screening,female,78,us,p,inc,Fasted plasma glucose 140 mg/dL
+130,screening,male,55,us,h,inc,Plasma glucose levels 210 mg/dL 2 hours after OGT

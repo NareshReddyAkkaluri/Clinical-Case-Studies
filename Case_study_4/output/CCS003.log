@@ -1,0 +1,189 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+499  
+500  
+501  /*Creating macros for convience directory changes*/
+502  %let output =D:\KiTel_CS\Case_study_3\output;
+503  %let RawData=D:\KiTel_CS\Case_study_3\RawData ;
+504  
+505  /*Creating permanent library*/
+506  libname mylib "&output" ;
+NOTE: Libref MYLIB was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_3\output
+507  libname output "&output" ;
+NOTE: Libref OUTPUT refers to the same physical library as MYLIB.
+NOTE: Libref OUTPUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: D:\KiTel_CS\Case_study_3\output
+508  
+509  /* Import the dataset from the text file */
+510  
+511  data mylib.dispose;
+512  infile "&RawData\dispose.txt" dlm=',' firstobs=2 dsd;
+513      input pat $ dscat & $50. ;
+514  run;
+
+NOTE: The infile "D:\KiTel_CS\Case_study_3\RawData\dispose.txt" is:
+      Filename=D:\KiTel_CS\Case_study_3\RawData\dispose.txt,
+      RECFM=V,LRECL=32767,File Size (bytes)=89,
+      Last Modified=23 August 2024 10:14:45,
+      Create Time=06 September 2024 11:59:32
+
+NOTE: 4 records were read from the infile "D:\KiTel_CS\Case_study_3\RawData\dispose.txt".
+      The minimum record length was 12.
+      The maximum record length was 26.
+NOTE: The data set MYLIB.DISPOSE has 4 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+515  
+516  data mylib.Medication;
+517  infile "&RawData\medication.txt" dlm=',' firstobs=2 dsd;
+518      input pat $ height weight arm $ ;
+519  run;
+
+NOTE: The infile "D:\KiTel_CS\Case_study_3\RawData\medication.txt" is:
+      Filename=D:\KiTel_CS\Case_study_3\RawData\medication.txt,
+      RECFM=V,LRECL=32767,File Size (bytes)=341,
+      Last Modified=23 August 2024 10:14:45,
+      Create Time=06 September 2024 11:59:32
+
+NOTE: 20 records were read from the infile "D:\KiTel_CS\Case_study_3\RawData\medication.txt".
+      The minimum record length was 11.
+      The maximum record length was 19.
+NOTE: The data set MYLIB.MEDICATION has 20 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+520  
+521  data mylib.screen_pat;
+522      infile "&RawData\screen_pat.txt" dlm=',' firstobs=2 dsd;
+523      input pat $ visit:$10. sex $ age location:$3. status $ criteria $ criteria_des & $77.;
+524  run;
+
+NOTE: The infile "D:\KiTel_CS\Case_study_3\RawData\screen_pat.txt" is:
+      Filename=D:\KiTel_CS\Case_study_3\RawData\screen_pat.txt,
+      RECFM=V,LRECL=32767,File Size (bytes)=2063,
+      Last Modified=23 August 2024 10:14:45,
+      Create Time=06 September 2024 11:59:32
+
+NOTE: 28 records were read from the infile "D:\KiTel_CS\Case_study_3\RawData\screen_pat.txt".
+      The minimum record length was 44.
+      The maximum record length was 108.
+NOTE: The data set MYLIB.SCREEN_PAT has 28 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+525  
+526  /*Creating formats to be applied to variables as per specification logic*/
+527  proc format;
+528  value $ status
+529  'h'='Healthy'
+530  'p'='Patient'
+531  ;
+NOTE: Format $STATUS has been output.
+532  value $ gender
+533  'male'='M'
+534  'female'='F'
+535  ;
+NOTE: Format $GENDER has been output.
+536  value $ arm
+537  'p'='placebo'
+538  'a'='active'
+539  's'='standard'
+540  ;
+NOTE: Format $ARM has been output.
+541  value $ location
+542  'us'='USA'
+543  ;
+NOTE: Format $LOCATION has been output.
+544  run;
+
+NOTE: PROCEDURE FORMAT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+545  
+546  proc sort data=mylib.screen_pat;
+547  by pat;
+548  run;
+
+NOTE: There were 28 observations read from the data set MYLIB.SCREEN_PAT.
+NOTE: The data set MYLIB.SCREEN_PAT has 28 observations and 8 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+549  proc sort data=mylib.medication;
+550  by pat;
+551  run;
+
+NOTE: There were 20 observations read from the data set MYLIB.MEDICATION.
+NOTE: The data set MYLIB.MEDICATION has 20 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+552  proc sort data=mylib.dispose;
+553  by pat;
+554  run;
+
+NOTE: There were 4 observations read from the data set MYLIB.DISPOSE.
+NOTE: The data set MYLIB.DISPOSE has 4 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+555  
+556  /*Match merging created datasets by pat variable and applying formats*/
+557  data merges;
+558  merge mylib.screen_pat mylib.medication mylib.dispose;
+559  format sex $gender. status $status. arm $arm. location $location.;
+560  label pat='SUBJECT' visit='VISIT' age='AGE' sex='SEX' location='LOCATION' status='STATUS'
+560! height='HEIGHT' weight='WEIGHT' arm='ARM' criteria='CRITERIA' dscat='DISPOSITION CRITERIA';
+561  by pat;
+562  run;
+
+NOTE: There were 28 observations read from the data set MYLIB.SCREEN_PAT.
+NOTE: There were 20 observations read from the data set MYLIB.MEDICATION.
+NOTE: There were 4 observations read from the data set MYLIB.DISPOSE.
+NOTE: The data set WORK.MERGES has 28 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+563  
+564  /*Creating dataset based on eligibility criteria*/
+565  data output.eligibility;
+566  set merges;
+567  where age>=30 and status='h';
+568  run;
+
+NOTE: There were 22 observations read from the data set WORK.MERGES.
+      WHERE (age>=30) and (status='h');
+NOTE: The data set OUTPUT.ELIGIBILITY has 22 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+569  
+570  /*Creating inclusion criteria dataset and generating log*/
+571  proc printto log="&output\incl.log" new;
+572  run;
+

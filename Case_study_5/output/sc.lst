@@ -1,0 +1,448 @@
+                                              Listing 5
+                                          Screening Patient
+
+                                                              HEIGH                           
+         SITE       PATID       AGE        SEX       BIRDT      T    WEIGHT      RACESPEC     
+               1          1         78          2  25NOV1946  170.2   60.30   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                          2         52          1  01NOV1972  170.2   76.20   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                          3         55          2  13OCT1969  165.1   69.30   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
+                                              Listing 5
+                                          Screening Patient
+
+                                                               
+                                               LB_TEST         
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+                                       Neutrophils (% and/or ab
+                                                  PH           
+                                              POTASSIUM        
+                                              Phosphorus       
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+                                       Neutrophils (% and/or ab
+                                                  PH           
+                                              POTASSIUM        
+                                              Phosphorus       
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
+                                              Listing 5
+                                          Screening Patient
+
+                                                              HEIGH                           
+         SITE       PATID       AGE        SEX       BIRDT      T    WEIGHT      RACESPEC     
+               1          3         55          2  13OCT1969  165.1   69.30   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                          4         66          2  18MAY1958  184.2  114.80   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                         10         25          2  24MAY1999  182.9   90.30   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+               2          2         41          2  04JAN1983  165.1    0.64   CAUCASIAN/ASIAN 
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
+                                              Listing 5
+                                          Screening Patient
+
+                                                               
+                                               LB_TEST         
+                                       Neutrophils (% and/or ab
+                                                  PH           
+                                              POTASSIUM        
+                                              Phosphorus       
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+                                       Neutrophils (% and/or ab
+                                                  PH           
+                                              POTASSIUM        
+                                              Phosphorus       
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+                                       Neutrophils (% and/or ab
+                                                  PH           
+                                              POTASSIUM        
+                                              Phosphorus       
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+                                             BICARBONATE       
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
+                                              Listing 5
+                                          Screening Patient
+
+                                                              HEIGH                           
+         SITE       PATID       AGE        SEX       BIRDT      T    WEIGHT      RACESPEC     
+               2          2         41          2  04JAN1983  165.1    0.64   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                          3         61          1  22DEC1963  167.6   81.60   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
+                                              Listing 5
+                                          Screening Patient
+
+                                                               
+                                               LB_TEST         
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               CALCIUM         
+                                               Chloride        
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                                 GGT           
+                                              Hemoglobin       
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+                                       Monocytes (% and/or abso
+                                       Neutrophils (% and/or ab
+                                       Neutrophils (% and/or ab
+                                                  PH           
+                                                  PH           
+                                              POTASSIUM        
+                                              POTASSIUM        
+                                              Phosphorus       
+                                              Phosphorus       
+                                               Protein         
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                           Specific Gravity    
+                                              Uric acid        
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+                                       WBC (WHITE BLOOD CELL CO
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+                                       Neutrophils (% and/or ab
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
+                                              Listing 5
+                                          Screening Patient
+
+                                                              HEIGH                           
+         SITE       PATID       AGE        SEX       BIRDT      T    WEIGHT      RACESPEC     
+               2          3         61          1  22DEC1963  167.6   81.60   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                          5         66          1  04OCT1958  170.2   77.10   CAUCASIAN/ASIAN 
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
+                                              Listing 5
+                                          Screening Patient
+
+                                                               
+                                               LB_TEST         
+                                                  PH           
+                                              POTASSIUM        
+                                              Phosphorus       
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+                                             BICARBONATE       
+                                       BUN (Blood Urea Nitrogen
+                                       Basophils (% and/or abso
+                                               CALCIUM         
+                                               Chloride        
+                                       EOSINOPHILS (% AND/OR AB
+                                                 GGT           
+                                              Hemoglobin       
+                                       Lymphocytes (% and/or ab
+                                       Monocytes (% and/or abso
+                                       Neutrophils (% and/or ab
+                                                  PH           
+                                              POTASSIUM        
+                                              Phosphorus       
+                                               Protein         
+                                       RBC (Red Blood Cell Coun
+                                           Specific Gravity    
+                                              Uric acid        
+                                       WBC (WHITE BLOOD CELL CO
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                         * 1=Male & 2=Female
+                      **Created by Naresh Reddy Akkaluri 21SEP24 Saturday 16:04
